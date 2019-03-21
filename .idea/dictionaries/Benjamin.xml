@@ -1,3 +1,20 @@
 <component name="ProjectDictionaryState">
-  <dictionary name="Benjamin" />
+  <dictionary name="Benjamin">
+    <words>
+      <w>anotherobject</w>
+      <w>derivedobject</w>
+      <w>geometricobject</w>
+      <w>getclassname</w>
+      <w>getprivatt</w>
+      <w>numbermaxofinstances</w>
+      <w>numberofclasses</w>
+      <w>numberofderivedclasses</w>
+      <w>numberofmethods</w>
+      <w>polymorph</w>
+      <w>privilegied</w>
+      <w>setclassname</w>
+      <w>setprivatt</w>
+      <w>wreturn</w>
+    </words>
+  </dictionary>
 </component>

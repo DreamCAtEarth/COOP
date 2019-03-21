@@ -1,169 +1,145 @@
 #if !defined(_Object_Public_) && !defined(_Object_Private_Start_) && !defined(_Object_Protected_Start_)
 
 /* Nouvelle(s) classe(s) */
-typedef struct ObjectClass ObjectClass;
+/*public */typedef struct Object_ Object_;
 
 /* Instance(s) associée(s) */
-typedef struct ObjectInstance ObjectInstance;
+/*public */typedef struct Object Object;
 
-struct ObjectClass
+/* Surchargeur(s) de méthode(s) */
+/*public */typedef struct overrideConstructorObject overrideConstructorObject;
+
+/* Descripteur de classe */
+/*public */struct Object_
 {
-    /* Méthodes d'instances publiques */
-    void(*setPrivateAttribute)(char *, ObjectInstance *);
-    void(*setProtectedAttribute)(char *, ObjectInstance *);
-    char *(*getPrivateAttribute)(ObjectInstance *);
-    char *(*getProtectedAttribute)(ObjectInstance *);
-    void(*delete)(ObjectInstance *);
+    /*public */void(*setPrivateAttribute)(char *, Object *);
+    /*public */void(*setProtectedAttribute)(char *, Object *);
+    /*public */char *(*getPrivateAttribute)(Object *);
+    /*public */char *(*getProtectedAttribute)(Object *);
+    /*public static */char *(*getClassName)(Object_ *);
+    /*public static */void(*setClassName)(char *, Object_ *);
+}*object;
 
-    /* Méthodes de classe publiques */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-}*Object;
-
-/* Définition de l'instance */
-struct ObjectInstance
+/* Définition d'instance */
+/*public */struct Object
 {
-    /* Classe de l'instance */
-    ObjectClass *class;
-
-    /* Attributs publics */
-    char *publicAttribute;
+    /*public */char *publicAttribute;
 };
 
-/* Fonctions implémentatrices publiques */
-ObjectInstance *NewObject(void); // Constructeur
+/* Définition du surchargeur du constructeur */
+/*public */struct overrideConstructorObject
+{
+    /*public */int sentinel;
+    /*public */char *publicAttribute;
+    /*public */char *protectedAttribute;
+    /*public */char *privateAttribute;
+};
+
+/* Prototypes des fonctions implémentatrices */
+/*public */Object *newObject(overrideConstructorObject *args);
 
 #define _Object_Public_
 
 #elif defined(_Object_Private_Start_) && !defined(_Object_Private_End_)
 
 /* Nouvelle(s) classe(s) */
-typedef struct ObjectClass ObjectClass;
+/*public */typedef struct Object_ Object_;
 
 /* Instance(s) associée(s) */
-typedef struct ObjectInstance ObjectInstance;
+/*public */typedef struct Object Object;
 
-struct ObjectClass
+/* Surchargeur(s) de méthode(s) */
+/*public */typedef struct overrideConstructorObject overrideConstructorObject;
+
+/* Descripteur de classe */
+/*public */struct Object_
 {
-    /* Méthodes d'instances publiques */
-    void(*setPrivateAttribute)(char *, ObjectInstance *);
-    void(*setProtectedAttribute)(char *, ObjectInstance *);
-    char *(*getPrivateAttribute)(ObjectInstance *);
-    char *(*getProtectedAttribute)(ObjectInstance *);
-    void(*delete)(ObjectInstance *);
+    /*public */void(*setPrivateAttribute)(char *, Object *);
+    /*public */void(*setProtectedAttribute)(char *, Object *);
+    /*public */char *(*getPrivateAttribute)(Object *);
+    /*public */char *(*getProtectedAttribute)(Object *);
+    /*public static */char *(*getClassName)(Object_ *);
+    /*public static */void(*setClassName)(char *, Object_ *);
+    /*private static */char *className;
+}*object;
 
-    /* Méthodes d'instances protégées */
-    void(*protectedMethod)(ObjectInstance *);
-
-    /* Méthodes d'instances privées */
-    void(*privateMethod)(ObjectInstance *);
-
-    /* Méthodes de classe publiques */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-
-    /* Attributs de classe privés */
-    char *className;
-}*Object;
-
-/* Définition de l'instance */
-struct ObjectInstance
+/* Définition d'instance */
+/*public */struct Object
 {
-    /* Classe de l'instance */
-    ObjectClass *class;
-
-    /* Attributs publics */
-    char *publicAttribute;
-
-    /* Attributs protégés */
-    char *protectedAttribute;
-
-    /* Attributs privés */
-    char *privateAttribute;
-
-    /* Liaison de liste */
-    ObjectInstance *next;
+    /*public */char *publicAttribute;
+    /*protected */Object_ *class;
+    /*protected */char *protectedAttribute;
+    /*private */char *privateAttribute;
 };
-/* Listeur interne */
-ObjectInstance *listOfObjects;
 
-/* Fonctions implémentatrices publiques */
-ObjectInstance *NewObject(void); // Constructeur
-void setPrivateAttribute(char *string, ObjectInstance *this); // Mutateur
-void setProtectedAttribute(char *string, ObjectInstance *this); // Mutateur
-char *getPrivateAttribute(ObjectInstance *this); // Accesseur
-char *getProtectedAttribute(ObjectInstance *this); // Accesseur
-void deleteObject(ObjectInstance *this); // Destructeur
+/* Définition du surchargeur du constructeur */
+/*public */struct overrideConstructorObject
+{
+    /*public */int sentinel;
+    /*public */char *publicAttribute;
+    /*public */char *protectedAttribute;
+    /*public */char *privateAttribute;
+};
 
-/* Fonctions implémentatrices protégées */
-void protectedMethod(ObjectInstance *this); // Méthode dynamique d'instance
-
-/* Fonctions implémentatrices privées */
-void privateMethod(ObjectInstance *this); // Méthode dynamique d'instance
-
-/* Fonctions implémentatrices statiques publiques */
-char *getClassName(void); // Méthode statique de classe
-void setClassName(char *string); // Méthode statique de classe
+/* Prototypes des fonctions implémentatrices */
+/*public */Object *newObject(overrideConstructorObject *args);
+/*protected */void setPrivateAttributeObject(char *string, Object *this);
+/*protected */void setProtectedAttributeObject(char *string, Object *this);
+/*protected */char *getPrivateAttributeObject(Object *this);
+/*protected */char *getProtectedAttributeObject(Object *this);
+/*protected */char *getClassNameObject(Object_ *self);
+/*protected */void setClassNameObject(char *string, Object_ *self);
+/*private */void newClassObject(void);
 
 #define _Object_Private_End_
 
 #elif defined(_Object_Protected_Start_) && !defined(_Object_Protected_End_)
 
 /* Nouvelle(s) classe(s) */
-typedef struct ObjectClass ObjectClass;
+/*public */typedef struct Object_ Object_;
 
 /* Instance(s) associée(s) */
-typedef struct ObjectInstance ObjectInstance;
+/*public */typedef struct Object Object;
 
-struct ObjectClass
+/* Surchargeur(s) de méthode(s) */
+/*public */typedef struct overrideConstructorObject overrideConstructorObject;
+
+/* Descripteur de classe */
+/*public */struct Object_
 {
-    /* Méthodes d'instances publiques */
-    void(*setPrivateAttribute)(char *, ObjectInstance *);
-    void(*setProtectedAttribute)(char *, ObjectInstance *);
-    char *(*getPrivateAttribute)(ObjectInstance *);
-    char *(*getProtectedAttribute)(ObjectInstance *);
-    void(*delete)(ObjectInstance *);
+    /*public */void(*setPrivateAttribute)(char *, Object *);
+    /*public */void(*setProtectedAttribute)(char *, Object *);
+    /*public */char *(*getPrivateAttribute)(Object *);
+    /*public */char *(*getProtectedAttribute)(Object *);
+    /*public static */char *(*getClassName)(Object_ *);
+    /*public static */void(*setClassName)(char *, Object_ *);
+}*object;
 
-    /* Méthodes d'instances protégées */
-    void(*protectedMethod)(ObjectInstance *);
-
-    /* Méthodes de classe publiques */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-}*Object;
-
-/* Définition de l'instance */
-struct ObjectInstance
+/* Définition d'instance */
+/*public */struct Object
 {
-    /* Classe de l'instance */
-    ObjectClass *class;
-
-    /* Attributs publics */
-    char *publicAttribute;
-
-    /* Attributs protégés */
-    char *protectedAttribute;
-
-    /* Liaison de liste */
-    ObjectInstance *next;
+    /*public */char *publicAttribute;
+    /*protected */Object_ *class;
+    /*protected */char *protectedAttribute;
 };
-/* Listeur interne */
-ObjectInstance *listOfObjects;
 
-/* Fonctions implémentatrices publiques */
-ObjectInstance *NewObject(void); // Constructeur
-void setPrivateAttribute(char *string, ObjectInstance *super); // Mutateur
-void setProtectedAttribute(char *string, ObjectInstance *super); // Mutateur
-char *getPrivateAttribute(ObjectInstance *super); // Accesseur
-char *getProtectedAttribute(ObjectInstance *super); // Accesseur
-void deleteObject(ObjectInstance *super); // Destructeur
+/* Définition du surchargeur du constructeur */
+/*public */struct overrideConstructorObject
+{
+    /*public */int sentinel;
+    /*public */char *publicAttribute;
+    /*public */char *protectedAttribute;
+    /*public */char *privateAttribute;
+};
 
-/* Fonctions implémentatrices protégées */
-void protectedMethod(ObjectInstance *super); // Méthode dynamique d'instance
-
-/* Fonctions implémentatrices statiques publiques */
-char *getClassName(void); // Méthode statique de classe
-void setClassName(char *string); // Méthode statique de classe
+/* Prototypes des fonctions implémentatrices */
+/*public */Object *newObject(overrideConstructorObject *args);
+/*protected */void setPrivateAttributeObject(char *string, Object *this);
+/*protected */void setProtectedAttributeObject(char *string, Object *this);
+/*protected */char *getPrivateAttributeObject(Object *this);
+/*protected */char *getProtectedAttributeObject(Object *this);
+/*protected */char *getClassNameObject(Object_ *self);
+/*protected */void setClassNameObject(char *string, Object_ *self);
 
 #define _Object_Protected_End_
 

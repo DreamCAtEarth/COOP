@@ -1,47 +1,45 @@
 #if !defined(_DerivedObject_Public_) && !defined(_DerivedObject_Private_Start_) && !defined(_DerivedObject_Protected_Start_)
 
-#include "Object.h"
+#include "object.h"
 
-/* Nouvelle(s) classe(s) */
-typedef struct DerivedObjectClass DerivedObjectClass;
+/* Importation(s) de classe(s) */
+/*public */typedef struct DerivedObjectClass DerivedObjectClass;
 
 /* Instance(s) associée(s) */
-typedef struct DerivedObjectInstance DerivedObjectInstance;
+/*public */typedef struct DerivedObjectInstance DerivedObjectInstance;
 
 /* Nouveaux types composés */
-typedef struct length length;
-typedef struct height height;
+/*public */typedef struct length length;
+/*public */typedef struct height height;
 
+/* Descripteur de classe */
 struct DerivedObjectClass
 {
-    /* Méthodes d'instances publiques héritées d'Object */
-    void(*setPrivateAttribute)(char *, DerivedObjectInstance *);
-    void(*setProtectedAttribute)(char *, DerivedObjectInstance *);
-    char *(*getPrivateAttribute)(DerivedObjectInstance *);
-    char *(*getProtectedAttribute)(DerivedObjectInstance *);
-    void(*delete)(DerivedObjectInstance *);
+    /* Héritage d'object */
+    /*public */void(*setPrivateAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */void(*setProtectedAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */char *(*getPrivateAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */char *(*getProtectedAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */void(*delete)(DerivedObjectInstance *); /* Destructeur*/
+    /*public static */char *(*getClassName)(DerivedObjectClass *); /* Méthode statique*/
+    /*public static */void(*setClassName)(char *, DerivedObjectClass *); /* Méthode statique*/
 
-    /* Méthodes de classe publiques héritées d'Object */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-
-    // Nouvelles méthodes d'instances publiques
-    float(*getLength)(char *, DerivedObjectInstance *);
-    float(*getHeight)(char *, DerivedObjectInstance *);
-    void(*setLength)(float, float, float, float, DerivedObjectInstance *);
-    void(*setHeight)(float, float, float, float, DerivedObjectInstance *);
+    /* Nouveauté de DerivedObject */
+    /*public */float(*getLength)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */float(*getHeight)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setLength)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setHeight)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
 }*DerivedObject;
 
+/* Définition d'instance */
 struct DerivedObjectInstance
 {
-    DerivedObjectClass *class;
-
-    // Attributs publics hérités d'Object
-    char *publicAttribute;
+    /* Héritage d'object */
+    /*public */char *publicAttribute; /* Attribut*/
 };
 
-/* Fonctions implémentatrices publiques */
-DerivedObjectInstance *NewDerivedObject(void); // Constructeurs
+/* Fonctions implémentatrices appelables partout */
+DerivedObjectInstance *NewDerivedObject(void); /* Constructeur*/
 
 #define _DerivedObject_Public_
 
@@ -50,17 +48,24 @@ DerivedObjectInstance *NewDerivedObject(void); // Constructeurs
 #include "Object.h"
 
 /* Nouvelle(s) classe(s) */
-typedef struct DerivedObjectClass DerivedObjectClass;
+/*public */typedef struct DerivedObjectClass DerivedObjectClass;
 
 /* Instance(s) associée(s) */
-typedef struct DerivedObjectInstance DerivedObjectInstance;
+/*public */typedef struct DerivedObjectInstance DerivedObjectInstance;
 
 /* Nouveaux types composés */
-typedef struct length length;
-typedef struct height height;
+/*public */typedef struct length length;
+/*public */typedef struct height height;
 
-/* Nouvelle définition privée des membres des types composés */
-struct length
+/* Définition des membres des types composés */
+/*private */struct length
+{
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+};
+/*private */struct height
 {
     float x1;
     float y1;
@@ -68,130 +73,109 @@ struct length
     float y2;
 };
 
-struct height
-{
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-};
-
+/* Descripteur de classe */
 struct DerivedObjectClass
 {
-    /* Méthodes d'instances publiques héritées d'Object */
-    void(*setPrivateAttribute)(char *, DerivedObjectInstance *);
-    void(*setProtectedAttribute)(char *, DerivedObjectInstance *);
-    char *(*getPrivateAttribute)(DerivedObjectInstance *);
-    char *(*getProtectedAttribute)(DerivedObjectInstance *);
-    void(*delete)(DerivedObjectInstance *);
+    /* Héritage d'object */
+    /*public */void(*setPrivateAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */void(*setProtectedAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */char *(*getPrivateAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */char *(*getProtectedAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */void(*delete)(DerivedObjectInstance *); /* Destructeur*/
+    /*public static */char *(*getClassName)(DerivedObjectClass *); /* Méthode statique*/
+    /*public static */void(*setClassName)(char *, DerivedObjectClass *); /* Méthode statique*/
 
-    /* Méthodes d'instances protégées héritées d'Object */
-    void(*protectedMethod)(DerivedObjectInstance *);
-
-    /* Méthodes de classe publiques héritées d'Object */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-
-    // Nouvelles méthodes d'instances publiques
-    float(*getLength)(char *, DerivedObjectInstance *);
-    float(*getHeight)(char *, DerivedObjectInstance *);
-    void(*setLength)(float, float, float, float, DerivedObjectInstance *);
-    void(*setHeight)(float, float, float, float, DerivedObjectInstance *);
-
-    /* Nouveaux Attributs de classe privés */
-    char *className;
+    /* Nouveauté de DerivedObject */
+    /*public */float(*getLength)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */float(*getHeight)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setLength)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setHeight)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
+    /*private static */char *className; /* Attribut de classe*/
+    /*private static */int nbInstances; /* Attribut de classe*/
 }*DerivedObject;
 
+/* Définition d'instance */
 struct DerivedObjectInstance
 {
-    DerivedObjectClass *class;
+    /*protected */DerivedObjectClass *class; /* polymorphiseur*/
 
-    // Attributs publics hérités d'Object
-    char *publicAttribute;
+    /* Héritage d'object */
+    /*public */char *publicAttribute; /* Attribut*/
+    /*protected */char *protectedAttribute; /* Attribut*/
 
-    // Attributs protégés hérités d'Object
-    char *protectedAttribute;
-
-    // Nouveaux attributs privés
-    length length;
-    height height;
-
-    /* Liaison de liste */
-    DerivedObjectInstance *next;
+    /* Nouveauté de DerivedObject */
+    /*private */length length; /* Attribut*/
+    /*private */height height; /* Attribut*/
+    /*private */char *privateAttribute; /* Attribut*/
 };
-/* Listeur interne */
-DerivedObjectInstance *listOfDerivedObjects;
 
-/* Fonctions implémentatrices publiques */
-DerivedObjectInstance *NewDerivedObject(void); // Constructeurs
-float getLength(char *value, DerivedObjectInstance *this); // Accesseurs
-float getHeight(char *value, DerivedObjectInstance *this); // Accesseurs
-void setLength(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *this); // Mutateurs
-void setHeight(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *this); // Mutateurs
-void deleteDerivedObject(DerivedObjectInstance *this); // Destructeurs
+/* Fonctions implémentatrices appelables partout */
+DerivedObjectInstance *NewDerivedObject(void); /* Constructeur*/
+
+/* Fonctions implémentatrices appelables par héritage */
+float getLengthDerivedObject(char *value, DerivedObjectInstance *this);
+float getHeightDerivedObject(char *value, DerivedObjectInstance *this);
+void setLengthDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY,
+                            DerivedObjectInstance *this);
+void setHeightDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY,
+                            DerivedObjectInstance *this);
+
+/* Fonctions implémentatrices appelables uniquement dans la classe */
+void NewDerivedObjectClass(void);
 
 #define _DerivedObject_Private_End_
 
 #elif defined(_DerivedObject_Protected_Start_) && !defined(_DerivedObject_Protected_End_)
 
-#include "Object.h"
+#include "object.h"
 
-/* Nouvelle(s) classe(s) */
-typedef struct DerivedObjectClass DerivedObjectClass;
+/* Nouvelle(s) classe(s) parente(s) */
+/*public */typedef struct DerivedObjectClass DerivedObjectClass;
 
 /* Instance(s) associée(s) */
-typedef struct DerivedObjectInstance DerivedObjectInstance;
+/*public */typedef struct DerivedObjectInstance DerivedObjectInstance;
 
-/* Nouveaux types composés */
-typedef struct length length;
-typedef struct height height;
+/* Types composés hérités */
+/*public */typedef struct length length;
+/*public */typedef struct height height;
 
+/* Descripteur de superclasse */
 struct DerivedObjectClass
 {
-    /* Méthodes d'instances publiques héritées d'Object */
-    void(*setPrivateAttribute)(char *, DerivedObjectInstance *);
-    void(*setProtectedAttribute)(char *, DerivedObjectInstance *);
-    char *(*getPrivateAttribute)(DerivedObjectInstance *);
-    char *(*getProtectedAttribute)(DerivedObjectInstance *);
-    void(*delete)(DerivedObjectInstance *);
+    /* Héritage d'object */
+    /*public */void(*setPrivateAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */void(*setProtectedAttribute)(char *, DerivedObjectInstance *); /* Mutateur*/
+    /*public */char *(*getPrivateAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */char *(*getProtectedAttribute)(DerivedObjectInstance *); /* Accesseur*/
+    /*public */void(*delete)(DerivedObjectInstance *); /* Destructeur*/
+    /*public static */char *(*getClassName)(DerivedObjectClass *); /* Méthode statique*/
+    /*public static */void(*setClassName)(char *, DerivedObjectClass *); /* Méthode statique*/
 
-    /* Méthodes d'instances protégées héritées d'Object */
-    void(*protectedMethod)(DerivedObjectInstance *);
-
-    /* Méthodes de classe publiques héritées d'Object */
-    char *(*getClassName)(void);
-    void(*setClassName)(char *);
-
-    // Nouvelles méthodes d'instances publiques
-    float(*getLength)(char *, DerivedObjectInstance *);
-    float(*getHeight)(char *, DerivedObjectInstance *);
-    void(*setLength)(float, float, float, float, DerivedObjectInstance *);
-    void(*setHeight)(float, float, float, float, DerivedObjectInstance *);
+    /* Nouveauté de DerivedObject */
+    /*public */float(*getLength)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */float(*getHeight)(char *, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setLength)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
+    /*public */void(*setHeight)(float, float, float, float, DerivedObjectInstance *); /* Méthode*/
 }*DerivedObject;
 
+/* Définition d'instance */
 struct DerivedObjectInstance
 {
-    DerivedObjectClass *class;
+    /*protected */DerivedObjectClass *class; /* polymorphiseur*/
 
-    // Attributs publics hérités d'Object
-    char *publicAttribute;
-
-    // Attributs protégés hérités d'Object
-    char *protectedAttribute;
-
-    /* Liaison de liste */
-    DerivedObjectInstance *next;
+    /* Héritage d'object */
+    /*public */char *publicAttribute; /* Attribut*/
+    /*protected */char *protectedAttribute; /* Attribut*/
 };
-/* Listeur interne */
-DerivedObjectInstance *listOfDerivedObjects;
 
-/* Fonctions implémentatrices publiques */
-DerivedObjectInstance *NewDerivedObject(void); // Constructeurs
-float getLength(char *value, DerivedObjectInstance *this); // Accesseurs
-float getHeight(char *value, DerivedObjectInstance *this); // Accesseurs
-void setLength(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *this); // Mutateurs
-void setHeight(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *this); // Mutateurs
-void deleteDerivedObject(DerivedObjectInstance *this); // Destructeurs
+/* Fonctions implémentatrices appelables partout */
+DerivedObjectInstance *NewDerivedObject(void); /* Constructeur*/
+
+/* Fonctions implémentatrices appelables par héritage */
+float getLengthDerivedObject(char *value, DerivedObjectInstance *super);
+float getHeightDerivedObject(char *value, DerivedObjectInstance *super);
+void setLengthDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *super);
+void setHeightDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY, DerivedObjectInstance *super);
 
 #define _DerivedObject_Protected_End_
 

@@ -4,123 +4,106 @@
 #define _Object_Private_Start_
 #include "Object.h"
 
-#include "ObjectException.h"
+#define _objectModel_ExpertMode_Enabled_
+#include "objectModel.h"
 
-ObjectInstance *NewObject(void)
+#include "objectException.h"
+
+void newClassObject(void)
 {
-    if (Object == NULL)
+    object = (Object_ *)malloc(sizeof(Object_));
+    /*try / catch */
     {
-        Object = (ObjectClass *)malloc(sizeof(ObjectClass));
-        /*try*/
+        Exception *toCatch = tryToNotHaveNotAllocatedClassException(object);
+        if (catchNotAllocatedClassInterruption(toCatch) != NULL)
         {
-            if (!Object) throwExceptionNotAllocatedClass();
+            exit(toCatch->id);
         }
-
-        Object->setPrivateAttribute = setPrivateAttribute;
-        Object->setProtectedAttribute = setProtectedAttribute;
-        Object->getPrivateAttribute = getPrivateAttribute;
-        Object->getProtectedAttribute = getProtectedAttribute;
-
-        Object->delete = deleteObject;
-
-        Object->protectedMethod = protectedMethod;
-        Object->privateMethod = privateMethod;
-
-        Object->getClassName = getClassName;
-        Object->setClassName = setClassName;
-
-        Object->className = "Object";
-        listOfObjects = NULL;
     }
 
-    ObjectInstance *this = (ObjectInstance *)malloc(sizeof(ObjectInstance));
-    /*try*/
+    object->setPrivateAttribute = setPrivateAttributeObject;
+    object->setProtectedAttribute = setProtectedAttributeObject;
+    object->getPrivateAttribute = getPrivateAttributeObject;
+    object->getProtectedAttribute = getProtectedAttributeObject;
+    object->getClassName = getClassNameObject;
+    object->setClassName = setClassNameObject;
+
+    storeClassPointer(OBJECT, object);
+}
+
+Object *newObject(overrideConstructorObject *args)
+{
+    Object *this = (Object *)malloc(sizeof(Object));
+    /*try / catch */
     {
-        if (!this) throwExceptionNotAllocatedInstance();
+        Exception *toCatch = tryToNotHaveNotAllocatedInstanceException(this);
+        if (catchNotAllocatedInstanceInterruption(toCatch) != NULL)
+        {
+            exit(toCatch->id);
+        }
     }
+    this->class = object;
 
-    #pragma clang diagnostic push
-    #pragma ide diagnostic ignored "OCDFAInspection"
-    this->class = Object;
-
-    this->privateAttribute = "private";
-    this->protectedAttribute = "protected";
-    this->publicAttribute = "public";
-    #pragma clang diagnostic pop
-
-    if (listOfObjects == NULL)
-    {
-        this->next = NULL;
-        listOfObjects = this;
-    }
+    if(args->publicAttribute == 0)
+        this->publicAttribute = "public";
     else
-    {
-        this->next = listOfObjects;
-        listOfObjects = this;
-    }
+        this->publicAttribute = args->publicAttribute;
+
+    if(args->protectedAttribute == 0)
+        this->protectedAttribute = "protected";
+    else
+        this->protectedAttribute = args->protectedAttribute;
+
+    if(args->privateAttribute == 0)
+        this->privateAttribute = "private";
+    else
+        this->privateAttribute = args->privateAttribute;
+
+    storeInstancePointer(this);
+
+    nbInstances++;
 
     return this;
 }
 
-void deleteObject(ObjectInstance *this)
+void setPrivateAttributeObject(char *string, Object *this)
 {
-    this = listOfObjects;
-    listOfObjects = this->next;
-    if (listOfObjects == NULL)
-    {
-        free(this->class);
-        printf("Objet complètement libéré !\n");
-    }
-    free(this);
-    printf("Instance d'Objet complètement libéré !\n");
+    if(this->class != object)
+        this->privateAttribute = dynamicLink(this->class, this, SETPRIVATT, string);
+    else
+        this->privateAttribute = string;
 }
 
-void setPrivateAttribute(char *string, ObjectInstance *this)
-{
-    this->privateAttribute = string;
-}
-
-void setProtectedAttribute(char *string, ObjectInstance *this)
+void setProtectedAttributeObject(char *string, Object *this)
 {
     this->protectedAttribute = string;
 }
 
-char *getPrivateAttribute(ObjectInstance *this)
+char *getPrivateAttributeObject(Object *this)
 {
-    return this->privateAttribute;
+    if(this->class != object)
+        return dynamicLink(this->class, this, GETPRIVATT, NULL);
+    else
+        return this->privateAttribute;
 }
 
-char *getProtectedAttribute(ObjectInstance *this)
+char *getProtectedAttributeObject(Object *this)
 {
     return this->protectedAttribute;
 }
 
-void setClassName(char *string)
+void setClassNameObject(char *string, Object_ *self)
 {
-    Object->className = string;
+    if(self != object)
+        self->className = dynamicLink(self, NULL, SETCLASSNAME, string);
+    else
+        self->className = string;
 }
 
-char *getClassName(void)
+char *getClassNameObject(Object_ *self)
 {
-    return Object->className;
-}
-
-void protectedMethod(ObjectInstance *this)
-{
-    printf("%s\n", this->protectedAttribute);
-}
-
-void privateMethod(ObjectInstance *this)
-{
-    printf("%s\n", this->privateAttribute);
-}
-
-int regulatorObject(ObjectInstance *this, int bool)
-{
-    Object->privateMethod(this);
-    if(!bool)
-    {
-        return regulatorObject(this, 1);
-    }
-    else return 1;
+    if(self != object)
+        return dynamicLink(self, NULL, GETCLASSNAME, NULL);
+    else
+        return self->className;
 }

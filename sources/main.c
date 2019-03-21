@@ -1,32 +1,28 @@
 #include <stdio.h>
 
-#include "DerivedObject.h"
+#include "Object.h"
+
+#include "objectModel.h"
+
+#include "overriding.h"
 
 int main(void)
 {
-    ObjectInstance *object1 = NewObject();
-    ObjectInstance *object2 = NewObject();
-    ObjectInstance *object3 = NewObject();
-    ObjectInstance *object4 = NewObject();
-    DerivedObjectInstance *derivedObject1 = NewDerivedObject();
+    start();
 
-    Object->setPrivateAttribute("raconte moi une histoire", object1);
-    Object->setPrivateAttribute("j'adore l'argent", object2);
-    Object->setPrivateAttribute("nain porte quoi", object3);
-    Object->setPrivateAttribute("MDR !!", object4);
-    DerivedObject->setPrivateAttribute("LOL !!", derivedObject1);
+    Object *object1 = newObject();
+    Object *object2 = newObject("petit Objet", "petit Objet 2", "petit Objet 3");
+    Object *object3 = newObject("petit Objet 4", "petit Objet 5");
+    Object *object4 = newObject("petit Objet 6");
 
-    printf("%s\n", Object->getPrivateAttribute(object1));
-    printf("%s\n", Object->getPrivateAttribute(object2));
-    printf("%s\n", Object->getPrivateAttribute(object3));
-    printf("%s\n", Object->getPrivateAttribute(object4));
-    printf("%s\n", DerivedObject->getPrivateAttribute(derivedObject1));
+    printf("%s\n",object->getPrivateAttribute(object1));
+    printf("%s\n",object->getPrivateAttribute(object2));
+    printf("%s\n",object->getProtectedAttribute(object2));
+    printf("%s\n",object2->publicAttribute);
+    printf("%s\n",object->getPrivateAttribute(object3));
+    printf("%s\n",object->getPrivateAttribute(object4));
 
-    Object->delete(object1);
-    Object->delete(object2);
-    Object->delete(object3);
-    Object->delete(object4);
-    DerivedObject->delete(derivedObject1);
+    end();
 
     return 0;
 }
