@@ -2,6 +2,7 @@
   <dictionary name="Benjamin">
     <words>
       <w>anotherobject</w>
+      <w>classname</w>
       <w>derivedobject</w>
       <w>geometricobject</w>
       <w>getclassname</w>

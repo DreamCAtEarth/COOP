@@ -1,50 +1,49 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define _DerivedObject_Private_Start_
 #define _Object_Protected_Start_
+#define _DerivedObject_Private_Start_
+#include "Object.h"
 #include "DerivedObject.h"
 
-#include "objectException.h"
-#include "ObjectPolymorphismHelper.h"
+#define _objectModel_ExpertMode_Enabled_
+#include "objectModel.h"
 
-void NewDerivedObjectClass(void)
+#include "objectException.h"
+
+void newClassDerivedObject(void)
 {
-    DerivedObject = (DerivedObjectClass *)malloc(sizeof(DerivedObjectClass));
+    derivedObject = (DerivedObject_ *)malloc(sizeof(DerivedObject_));
     /*try / catch */
     {
-        Exception *toCatch = tryToNotHaveNotAllocatedClassException(DerivedObject);
-        if(catchNotAllocatedClassInterruption(toCatch) != NULL)
+        Exception *toCatch = tryToNotHaveNotAllocatedClassException(object);
+        if (catchNotAllocatedClassInterruption(toCatch) != NULL)
         {
             exit(toCatch->id);
         }
     }
 
-    DerivedObject->setPrivateAttribute = (void *)setPrivateAttributeObject;
-    DerivedObject->setProtectedAttribute = (void *)setProtectedAttributeObject;
-    DerivedObject->getPrivateAttribute = (void *)getPrivateAttributeObject;
-    DerivedObject->getProtectedAttribute = (void *)getProtectedAttributeObject;
-    DerivedObject->delete = (void *)deleteObject;
-    DerivedObject->getClassName = (void *)getClassNameObject;
-    DerivedObject->setClassName = (void *)setClassNameObject;
+    derivedObject->setPrivateAttribute = (void *)setPrivateAttributeObject;
+    derivedObject->setProtectedAttribute = (void *)setProtectedAttributeObject;
+    derivedObject->getPrivateAttribute = (void *)getPrivateAttributeObject;
+    derivedObject->getProtectedAttribute = (void *)getProtectedAttributeObject;
+    derivedObject->getClassName = (void *)getClassNameObject;
+    derivedObject->setClassName = (void *)setClassNameObject;
 
-    DerivedObject->getLength = getLengthDerivedObject;
-    DerivedObject->getHeight = getHeightDerivedObject;
-    DerivedObject->setLength = setLengthDerivedObject;
-    DerivedObject->setHeight = setHeightDerivedObject;
+    derivedObject->getLength = getLengthDerivedObject;
+    derivedObject->getHeight = getHeightDerivedObject;
+    derivedObject->setLength = setLengthDerivedObject;
+    derivedObject->setHeight = setHeightDerivedObject;
 
-    DerivedObject->className = "DerivedObject";
-    DerivedObject->nbInstances = 0;
+    derivedObject->className = __CLASSNAME__;
 
-    storeClassPointer(DERIVEDOBJECT, DerivedObject);
+    storeClassPointer(DERIVEDOBJECT, derivedObject);
 }
 
-DerivedObjectInstance *NewDerivedObject(void)
+DerivedObject *newDerivedObject(overrideConstructorDerivedObject *args)
 {
-    if (DerivedObject == NULL)
-    {
-        NewDerivedObjectClass();
-    }
-    DerivedObjectInstance *this = (DerivedObjectInstance *)malloc(sizeof(DerivedObjectInstance));
+    DerivedObject *this = (DerivedObject *)malloc(sizeof(DerivedObject));
     /*try / catch */
     {
         Exception *toCatch = tryToNotHaveNotAllocatedInstanceException(this);
@@ -53,11 +52,24 @@ DerivedObjectInstance *NewDerivedObject(void)
             exit(toCatch->id);
         }
     }
-    this->class = DerivedObject;
+    this->class = derivedObject;
 
-    this->privateAttribute = "DA private";
-    this->protectedAttribute = "DA protected";
-    this->publicAttribute = "DA public";
+    if(args->publicAttribute == 0)
+        this->publicAttribute = "DA public";
+    else
+    {
+        this->publicAttribute = args->publicAttribute;
+        if(args->protectedAttribute == 0)
+            this->protectedAttribute = "DA protected";
+        else
+        {
+            this->protectedAttribute = args->protectedAttribute;
+            if (args->privateAttribute == 0)
+                this->privateAttribute = "DA private";
+            else
+                this->privateAttribute = args->privateAttribute;
+        }
+    }
 
     this->length.x1 = 8.5f;
     this->length.y1 = 7.5f;
@@ -69,12 +81,12 @@ DerivedObjectInstance *NewDerivedObject(void)
     this->height.x2 = 4.2f;
     this->height.y2 = 7.8f;
 
-    DerivedObject->nbInstances++;
+    storeInstancePointer(this);
 
     return this;
 }
 
-float getLengthDerivedObject(char *value, DerivedObjectInstance *this)
+float getLengthDerivedObject(const char *value, DerivedObject *this)
 {
     switch(value[0])
     {
@@ -84,7 +96,7 @@ float getLengthDerivedObject(char *value, DerivedObjectInstance *this)
     }
 }
 
-float getHeightDerivedObject(char *value, DerivedObjectInstance *this)
+float getHeightDerivedObject(const char *value, DerivedObject *this)
 {
     switch(value[0])
     {
@@ -95,7 +107,7 @@ float getHeightDerivedObject(char *value, DerivedObjectInstance *this)
 }
 
 void setLengthDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY,
-                            DerivedObjectInstance *this)
+                            DerivedObject *this)
 {
     this->length.x1 = lineStartX;
     this->length.y1 = lineStartY;
@@ -104,7 +116,7 @@ void setLengthDerivedObject(float lineStartX, float lineStartY, float lineEndX, 
 }
 
 void setHeightDerivedObject(float lineStartX, float lineStartY, float lineEndX, float lineEndY,
-                            DerivedObjectInstance *this)
+                            DerivedObject *this)
 {
     this->height.x1 = lineStartX;
     this->height.y1 = lineStartY;

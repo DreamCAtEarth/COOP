@@ -7,10 +7,11 @@ add_executable(COOP sources/main.c
         sources/Object.c
         sources/Object.h
 
+        sources/DerivedObject.c
+        sources/DerivedObject.h
+
         sources/objectModel.c
         sources/objectModel.h
-
-        sources/overriding.h
 
         sources/objectException.c
         sources/objectException.h)

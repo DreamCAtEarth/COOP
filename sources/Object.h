@@ -134,12 +134,12 @@
 
 /* Prototypes des fonctions implémentatrices */
 /*public */Object *newObject(overrideConstructorObject *args);
-/*protected */void setPrivateAttributeObject(char *string, Object *this);
-/*protected */void setProtectedAttributeObject(char *string, Object *this);
-/*protected */char *getPrivateAttributeObject(Object *this);
-/*protected */char *getProtectedAttributeObject(Object *this);
-/*protected */char *getClassNameObject(Object_ *self);
-/*protected */void setClassNameObject(char *string, Object_ *self);
+/*protected */void setPrivateAttributeObject(char *string, Object *super);
+/*protected */void setProtectedAttributeObject(char *string, Object *super);
+/*protected */char *getPrivateAttributeObject(Object *super);
+/*protected */char *getProtectedAttributeObject(Object *super);
+/*protected */char *getClassNameObject(Object_ *parent);
+/*protected */void setClassNameObject(char *string, Object_ *parent);
 
 #define _Object_Protected_End_
 

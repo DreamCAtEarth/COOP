@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define _Object_Private_Start_
 #include "Object.h"
@@ -28,6 +29,8 @@ void newClassObject(void)
     object->getClassName = getClassNameObject;
     object->setClassName = setClassNameObject;
 
+    object->className = __CLASSNAME__;
+
     storeClassPointer(OBJECT, object);
 }
 
@@ -47,22 +50,21 @@ Object *newObject(overrideConstructorObject *args)
     if(args->publicAttribute == 0)
         this->publicAttribute = "public";
     else
+    {
         this->publicAttribute = args->publicAttribute;
-
-    if(args->protectedAttribute == 0)
-        this->protectedAttribute = "protected";
-    else
-        this->protectedAttribute = args->protectedAttribute;
-
-    if(args->privateAttribute == 0)
-        this->privateAttribute = "private";
-    else
-        this->privateAttribute = args->privateAttribute;
+        if(args->protectedAttribute == 0)
+            this->protectedAttribute = "protected";
+        else
+        {
+            this->protectedAttribute = args->protectedAttribute;
+            if (args->privateAttribute == 0)
+                this->privateAttribute = "private";
+            else
+                this->privateAttribute = args->privateAttribute;
+        }
+    }
 
     storeInstancePointer(this);
-
-    nbInstances++;
-
     return this;
 }
 
