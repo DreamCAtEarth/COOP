@@ -3,9 +3,13 @@
 void start(void);
 void end(void);
 
-/* Surcharges autorisées pour ces méthodes */
-#define newObject(...) newObject(&(overrideConstructorObject) { .sentinel = 0, __VA_ARGS__ })
-#define newDerivedObject(...) newDerivedObject(&(overrideConstructorDerivedObject) { .sentinel = 0, __VA_ARGS__ })
+/* Surcharges et règles autorisées pour les méthodes variadiques */
+#ifndef OVERRIDES_RULES
+    #define DEFAULT_VA_ARGS_VALUE 0
+    #define coopObject(...) new_coop_Object(&(overrideConstructor_coop_Object) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ })
+    #define coopDerivedObject(...) new_coop_DerivedObject(&(overrideConstructor_coop_DerivedObject) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ })
+#define OVERRIDES_RULES
+#endif
 
 #define _objectModel_BasicMode_
 
@@ -14,20 +18,20 @@ void end(void);
 /* Table des classes à polymorphiser */
 typedef enum classes
 {
-    OBJECT,
-    DERIVEDOBJECT,
-    /*ANOTHEROBJECT,
-    GEOMETRICOBJECT,*/
+    COOP_OBJECT,
+    COOP_DERIVEDOBJECT,
+    /*COOP_ANOTHEROBJECT,
+    COOP_GEOMETRICOBJECT,*/
     NUMBEROFCLASSES
 }ClassesIds;
 
 /* Table des méthodes à polymorphiser */
 typedef enum methodsToPolymorph
 {
-    GETPRIVATT,
-    SETPRIVATT,
-    GETCLASSNAME,
-    SETCLASSNAME,
+    COOP_OBJECT_SETPRIVATEATTRIBUTE,
+    COOP_OBJECT_GETPRIVATEATTRIBUTE,
+    COOP_OBJECT_SETCLASSNAME,
+    COOP_OBJECT_GETCLASSNAME,
     DELETE
     // NUMBEROFMETHODS
 }methodIds;
@@ -38,7 +42,6 @@ static const int NUMBERMAXOFINSTANCES = 100; */
 /* Table des pointeurs de classes et d'instances */
 static void *classIds[NUMBEROFCLASSES];
 static void *instanceIds[100];
-static char *classNameToken = NULL;
 
 /* Nombre de classes et d'instances */
 static unsigned int nbInstances = 0;
@@ -51,7 +54,15 @@ void storeClassPointer(ClassesIds value, void *class);
 void storeInstancePointer(void *instance);
 
 #ifndef __CLASSNAME__
-#define __CLASSNAME__ strtok_s((strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__), ".", &classNameToken)
+#define __CLASSNAME__ __FILE__
+#endif
+
+/* Surcharges et règles autorisées pour les méthodes variadiques */
+#ifndef OVERRIDES_RULES
+    #define DEFAULT_VA_ARGS_VALUE 0
+    #define coopObject(...) new_coop_Object(&(overrideConstructor_coop_Object) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ })
+    #define coopDerivedObject(...) new_coop_DerivedObject(&(overrideConstructor_coop_DerivedObject) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ })
+#define OVERRIDES_RULES
 #endif
 
 #define _objectModel_ExpertMode_Disabled_

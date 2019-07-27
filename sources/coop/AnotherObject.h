@@ -1,6 +1,6 @@
 #if !defined(_AnotherObject_Public_) && !defined(_AnotherObject_Private_Start_) && !defined(_AnotherObject_Protected_Start_)
 
-#include "object.h"
+#include "Object.h"
 
 /* Nouvelle(s) classe(s) */
 /*public */typedef struct AnotherObjectClass AnotherObjectClass;

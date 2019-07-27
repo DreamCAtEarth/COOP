@@ -16,7 +16,7 @@
 #define _Object_Protected_Start_
 #include "AnotherObject.h"
 
-#include "objectException.h"
+#include "../objectException.h"
 
 void NewAnotherObjectClass(void)
 {

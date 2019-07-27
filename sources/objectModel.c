@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define _Object_Private_Start_
-#include "Object.h"
-#define _DerivedObject_Private_Start_
-#include "DerivedObject.h"
+#define _coop_Object_Private_Start_
+#include "coop/Object.h"
+#define _coop_DerivedObject_Private_Start_
+#include "coop/DerivedObject.h"
 /*#define _AnotherObject_Private_Start_
 #include "AnotherObject.h"
 #define _GeometricObject_Private_Start_
@@ -18,8 +18,8 @@
 /* Lien tardif et polymorphisme effectués grâce aux casts */
 void *dynamicLink(void *class, void *instance, methodIds methodToPolymorph, void *newValueToSet)
 {
-	DerivedObject_ *classA1 = NULL;
-	DerivedObject *instanceA1 = NULL;
+	coopDerivedObject_ *classA1 = NULL;
+	coop_DerivedObject *instanceA1 = NULL;
 
 	/*AnotherObject_ *classA2 = NULL;
 	AnotherObject *instanceA2 = NULL;
@@ -29,11 +29,11 @@ void *dynamicLink(void *class, void *instance, methodIds methodToPolymorph, void
 
 	void *genericValueToReturn = NULL;
 
-	if(class == classIds[DERIVEDOBJECT])
+	if(class == classIds[COOP_DERIVEDOBJECT])
 	{
-		classA1 = (DerivedObject_ *) class;
+		classA1 = (coopDerivedObject_ *) class;
 		if(instance != NULL)
-			instanceA1 = (DerivedObject *) instance;
+			instanceA1 = (coop_DerivedObject *) instance;
 	}
 	/*else if(class == classIds[ANOTHEROBJECT])
 	{
@@ -55,20 +55,20 @@ void *dynamicLink(void *class, void *instance, methodIds methodToPolymorph, void
 	switch(methodToPolymorph)
     {
         /*dynamic methods*/
-        case GETPRIVATT:
+        case COOP_OBJECT_GETPRIVATEATTRIBUTE:
             if(instanceA1 != NULL)
                 genericValueToReturn = instanceA1->privateAttribute;
 		break;
-        case SETPRIVATT:
+        case COOP_OBJECT_SETPRIVATEATTRIBUTE:
             if(instanceA1 != NULL)
                 genericValueToReturn = instanceA1->privateAttribute = newValueToSet;
 		break;/**/
         /*static methods*/
-        case GETCLASSNAME:
+        case COOP_OBJECT_GETCLASSNAME:
             if(classA1 != NULL)
                 genericValueToReturn = classA1->className;
 		break;
-        case SETCLASSNAME:
+        case COOP_OBJECT_SETCLASSNAME:
             if(classA1 != NULL)
                 genericValueToReturn = classA1->className = newValueToSet;
 		break;/**/
@@ -101,8 +101,8 @@ void *dynamicLink(void *class, void *instance, methodIds methodToPolymorph, void
 - nombre croissant pour une classe donnée avec un ordre de lecture allant de haut en bas et de gauche à droite dans une hiérarchie*/
 void start(void)
 {
-	newClassObject();
-	newClassDerivedObject();
+    newClass_coop_Object();
+    newClass_coop_DerivedObject();
     /*newAnotherObjectClass();
     newGeometricObjectClass();*/
 	nbClasses = NUMBEROFCLASSES;

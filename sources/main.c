@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "DerivedObject.h"
+#include "coop/DerivedObject.h"
 
 #include "objectModel.h"
 
@@ -8,10 +8,10 @@ int main(void)
 {
     start();
 
-    DerivedObject *derivedObject1 = newDerivedObject("yeah","marche !");
-    printf("%s\n", derivedObject->getProtectedAttribute(derivedObject1));
-    printf("%s\n", derivedObject->getPrivateAttribute(derivedObject1));
-    printf("%s\n", derivedObject->getClassName(derivedObject));
+    coop_DerivedObject *derivedObject1 = coopDerivedObject("yeah","marche !","Gilets jaunes");
+    printf("%s\n", coopDerivedObject->getProtectedAttribute(derivedObject1));
+    printf("%s\n", coopDerivedObject->getPrivateAttribute(derivedObject1));
+    printf("%s\n", coopDerivedObject->getClassName(coopDerivedObject));
 
     end();
 

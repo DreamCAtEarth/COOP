@@ -6,6 +6,7 @@
       <w>derivedobject</w>
       <w>geometricobject</w>
       <w>getclassname</w>
+      <w>getprivateattribute</w>
       <w>getprivatt</w>
       <w>numbermaxofinstances</w>
       <w>numberofclasses</w>
@@ -14,6 +15,7 @@
       <w>polymorph</w>
       <w>privilegied</w>
       <w>setclassname</w>
+      <w>setprivateattribute</w>
       <w>setprivatt</w>
       <w>wreturn</w>
     </words>

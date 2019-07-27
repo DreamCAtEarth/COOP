@@ -3,12 +3,14 @@ project(COOP C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(COOP sources/main.c
-        sources/Object.c
-        sources/Object.h
+add_executable(COOP
+        sources/main.c
 
-        sources/DerivedObject.c
-        sources/DerivedObject.h
+        sources/coop/Object.c
+        sources/coop/Object.h
+
+        sources/coop/DerivedObject.c
+        sources/coop/DerivedObject.h
 
         sources/objectModel.c
         sources/objectModel.h
