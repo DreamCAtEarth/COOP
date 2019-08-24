@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
-#define private_coop_object_start
+#define private_util_object_start
 #include "Object.h"
 
-#include "coop.h"
+#include "util.h"
 
 #include "../objectModel.h"
 
@@ -17,22 +17,22 @@ static char *getProtectedAttribute(struct Object *);
 static void setClassName(char *);
 static char *getClassName();
 
-void coop_Object(void)
+void util_Object(void)
 {
     self = (struct Object_ *)malloc(sizeof(struct Object_));
-    self->Object = (struct coop_Object_ *)malloc(sizeof(struct coop_Object_));
+    self->Object = (struct util_Object_ *)malloc(sizeof(struct util_Object_));
 
-    self->className = "Object A";
+    self->className = "Object B";
 
-    coop.Object = self->Object;
-    coop.newObject = (void *)new;
+    util.Object = self->Object;
+    util.newObject = (void *)new;
 
-    coop.Object->setPrivateAttribute = (void *)setPrivateAttribute;
-    coop.Object->getPrivateAttribute = (void *)getPrivateAttribute;
-    coop.Object->setProtectedAttribute = (void *)setProtectedAttribute;
-    coop.Object->getProtectedAttribute = (void *)getProtectedAttribute;
-    coop.Object->setClassName = (void *)setClassName;
-    coop.Object->getClassName = (void *)getClassName;
+    util.Object->setPrivateAttribute = (void *)setPrivateAttribute;
+    util.Object->getPrivateAttribute = (void *)getPrivateAttribute;
+    util.Object->setProtectedAttribute = (void *)setProtectedAttribute;
+    util.Object->getProtectedAttribute = (void *)getProtectedAttribute;
+    util.Object->setClassName = (void *)setClassName;
+    util.Object->getClassName = (void *)getClassName;
 
     storePointer(self->Object);
     storePointer(self);
@@ -41,9 +41,9 @@ void coop_Object(void)
 static struct Object *new(void)
 {
     struct Object *this = (struct Object *)malloc(sizeof(struct Object));
-    this->Object = (struct coop_Object *)this;
+    this->Object = (struct util_Object *)this;
 
-    this->Object->publicAttribute = "B public coop";
+    this->Object->publicAttribute = "B public util";
 
     this->class = self;
 

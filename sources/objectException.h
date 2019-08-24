@@ -2,29 +2,26 @@
 
 typedef struct Exception Exception;
 
-typedef enum ExceptionType
+typedef enum ExceptionSeverity
 {
     interruption,
     error,
     warning,
-    info
-}ExceptionType;
+    info,
+    success
+}ExceptionSeverity;
 
 struct Exception
 {
     int id;
-    ExceptionType severityLevel;
+    ExceptionSeverity severityLevel;
     char *name;
     char *description;
 };
 
-Exception *catchingDefaultDisplayProtocol(Exception *exceptionCaught);
-
 Exception *tryToNotHaveNotAllocatedClassException(void *class);
-Exception *catchNotAllocatedClassInterruption(Exception *exceptionCaught);
 Exception *tryToNotHaveNotAllocatedInstanceException(void *instance);
-Exception *catchNotAllocatedInstanceInterruption(Exception *exceptionCaught);
-Exception *tryToNotHaveDivisionByZeroException(float divisorValue);
-Exception *catchDivisionByZeroError(Exception *exceptionCaught);
+// Exception *tryToNotHaveDivisionByZeroException(float divisorValue);
+// Exception *catchDivisionByZeroError(Exception *exceptionCaught);
 
 void throwAbnormalProgramTermination(char * fileName, int line);

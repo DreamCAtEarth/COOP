@@ -4,83 +4,47 @@
 
 static Exception exceptionToThrow;
 
-Exception *catchingDefaultDisplayProtocol(Exception *exceptionCaught)
-{
-    //Display all the informations to the user depending on the context
-    if(exceptionCaught->severityLevel == interruption)
-    {
-        printf("%s Interruption call :\nThe program must shut down !\n",exceptionCaught->name);
-        printf("%s\n",exceptionCaught->description);
-        //Actions to Perform : manager which call an exit statement to the program after the catch block
-    }
-    else if(exceptionCaught->severityLevel == error)
-    {
-        printf("%s Error call :\nThe module of the program must stop and let the program continue.\n",exceptionCaught->name);
-        printf("%s\n",exceptionCaught->description);
-        //Actions to Perform : manager which call a return statement to the current function after the catch block
-    }
-    else if(exceptionCaught->severityLevel == warning)
-    {
-        printf("%s Warning call :\nThe statement have to be corrected.\n",exceptionCaught->name);
-        printf("%s\n",exceptionCaught->description);
-        //Actions to Perform : manager which call a continue statement to the current scope after the catch block
-    }
-    else if(exceptionCaught->severityLevel == info)
-    {
-        printf("%s Info call :\nThe statement is not conform but can continue.\n",exceptionCaught->name);
-        printf("%s\n",exceptionCaught->description);
-        //Actions to Perform : manager which inform the user of the wrong/not conform result after the catch block
-    }
-    return exceptionCaught;
-}
-
 Exception *tryToNotHaveNotAllocatedClassException(void *class)
 {
-    if(!class) /*throw*/
+    if(!class) /*thrown or throws*/
     {
         exceptionToThrow.id = 0xFA1;
         exceptionToThrow.severityLevel = interruption;
         exceptionToThrow.name = "Class not allocated";
         exceptionToThrow.description = "The Class of the Object was not allocated properly or not allocated at all by the operating system.";
-        return &exceptionToThrow;
     }
-    else
+    else /*notThrown*/
     {
-        return NULL;
+        exceptionToThrow.id = 0x0;
+        exceptionToThrow.severityLevel = success;
+        exceptionToThrow.name = "Class is allocated";
+        exceptionToThrow.description = "The Class of the Object was well allocated by the operating system.";
     }
-}
-
-Exception *catchNotAllocatedClassInterruption(Exception *exceptionCaught)
-{
-    if(exceptionCaught != NULL) return catchingDefaultDisplayProtocol(exceptionCaught);
-    else return exceptionCaught;
+    return &exceptionToThrow;
 }
 
 Exception *tryToNotHaveNotAllocatedInstanceException(void *instance)
 {
-    if(!instance) /*throw*/
+    if(!instance) /*thrown or throws*/
     {
         exceptionToThrow.id = 0xFA2;
         exceptionToThrow.severityLevel = interruption;
         exceptionToThrow.name = "Instance not allocated";
         exceptionToThrow.description = "The Instance of the Object was not allocated properly or not allocated at all by the operating system.";
-        return &exceptionToThrow;
     }
-    else
+    else /*notThrown*/
     {
-        return NULL;
+        exceptionToThrow.id = 0x0;
+        exceptionToThrow.severityLevel = success;
+        exceptionToThrow.name = "Instance is allocated";
+        exceptionToThrow.description = "The Instance of the Object was well allocated by the operating system.";
     }
+    return &exceptionToThrow;
 }
 
-Exception *catchNotAllocatedInstanceInterruption(Exception *exceptionCaught)
+/* Exception *tryToNotHaveDivisionByZeroException(float divisorValue)
 {
-    if(exceptionCaught != NULL) return catchingDefaultDisplayProtocol(exceptionCaught);
-    else return exceptionCaught;
-}
-
-Exception *tryToNotHaveDivisionByZeroException(float divisorValue)
-{
-    if(divisorValue == 0.0f) /*throw*/
+    if(divisorValue == 0.0f) // throw
     {
         exceptionToThrow.id = 0xFA3;
         exceptionToThrow.severityLevel = error;
@@ -92,13 +56,7 @@ Exception *tryToNotHaveDivisionByZeroException(float divisorValue)
     {
         return NULL;
     }
-}
-
-Exception *catchDivisionByZeroError(Exception *exceptionCaught)
-{
-    if(exceptionCaught != NULL) return catchingDefaultDisplayProtocol(exceptionCaught);
-    else return exceptionCaught;
-}
+}*/
 
 void throwAbnormalProgramTermination(char * fileName, int line)
 {

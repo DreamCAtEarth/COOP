@@ -1,23 +1,15 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Benjamin">
     <words>
-      <w>anotherobject</w>
       <w>classname</w>
-      <w>derivedobject</w>
-      <w>geometricobject</w>
       <w>getclassname</w>
       <w>getprivateattribute</w>
-      <w>getprivatt</w>
+      <w>maincoop</w>
       <w>numbermaxofinstances</w>
       <w>numberofclasses</w>
-      <w>numberofderivedclasses</w>
-      <w>numberofmethods</w>
-      <w>polymorph</w>
-      <w>privilegied</w>
+      <w>objectmodel</w>
       <w>setclassname</w>
       <w>setprivateattribute</w>
-      <w>setprivatt</w>
-      <w>wreturn</w>
     </words>
   </dictionary>
 </component>
