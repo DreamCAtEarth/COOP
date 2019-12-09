@@ -3,18 +3,24 @@
 
 #include "Object.h"
 
+#if defined(package_util_start) && !defined(package_util_stop)
+
 struct util
 {
-    struct util_Object_ *Object;
-    struct util_Object *(* newObject)(void);
-};
+    struct Object_ *Object;
+}util;
 
-void newClassesFromUtil(void);
+#define package_util_stop
+#else
 
-struct util util;
+struct util
+{
+    struct KPLGWrfu_ *Object;
+}util;
 
-#define util_OBJECT struct util_Object *
+#endif
 
-//&(coop_Object_OverrideConstructor) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ }
+/* declaration of new classes or new OO types for variables */
+#define KPLG_Wrfu struct KPLGWrfu *
 
-#endif // UTIL_H
+#endif //UTIL_H

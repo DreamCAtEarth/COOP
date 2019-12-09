@@ -1,9 +1,13 @@
-#ifndef kGAzHwmx_H
-#define kGAzHwmx_H
+#ifndef ddUKsuMN_H
+#define ddUKsuMN_H
 
-#if defined(protected_kGAzHwmx_start) && !defined(protected_kGAzHwmx_stop)
+#define protected_kGAzHwmx_start
+#include "Object.h"
+#define DIRECT_SUPER_CLASS kGAzHwmx
 
-#define CLASS Object
+#if defined(protected_ddUKsuMN_start) && !defined(protected_ddUKsuMN_stop)
+
+#define CLASS Derived
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -27,10 +31,10 @@
     ATTRIBUTE(private static, const void * const, className)
 #include "../objectModel.h"
 
-#define protected_kGAzHwmx_stop
-#elif defined(package_kGAzHwmx_start) && !defined(package_kGAzHwmx_stop)
+#define protected_ddUKsuMN_stop
+#elif defined(package_ddUKsuMN_start) && !defined(package_ddUKsuMN_stop)
 
-#define CLASS Object
+#define CLASS Derived
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -54,10 +58,10 @@
     ATTRIBUTE(private static, const void * const, className)
 #include "../objectModel.h"
 
-#define package_kGAzHwmx_stop
+#define package_ddUKsuMN_stop
 #endif
 
-#define CLASS kGAzHwmx
+#define CLASS ddUKsuMN
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -81,57 +85,55 @@
     ATTRIBUTE(private static, const void * const, className)
 #include "../objectModel.h"
 
-struct kGAzHwmx_overloads
+struct ddUKsuMN_overloads
 {
-    enum kGAzHwmx_options
+    enum ddUKsuMN_options
     {
-        kGAzHwmx_new_o1,
-        kGAzHwmx_new_o2,
-        kGAzHwmx_none
+        ddUKsuMN_new_o1,
+        ddUKsuMN_new_o2,
+        ddUKsuMN_none
     }options;
-    union kGAzHwmx_args
+    union ddUKsuMN_args
     {
-        struct kGAzHwmx_new_o1
+        struct ddUKsuMN_new_o1
         {
             char *arg1;
             char *arg2;
             char *arg3;
-            char *arg4;
         }new_o1;
-        struct kGAzHwmx_new_o2
+        struct ddUKsuMN_new_o2
         {
             int arg1;
             float arg2;
             char arg3;
-            double arg4;
         }new_o2;
     }*overloads;
 };
 
-struct kGAzHwmx *kGAzHwmx_(struct kGAzHwmx_overloads *);
+struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *);
 
 /* overloading of methods without parameters */
-#define kGAzHwmx_new_() \
-kGAzHwmx_ \
-(&(struct kGAzHwmx_overloads) \
+#define ddUKsuMN_new_() \
+ddUKsuMN_ \
+(&(struct ddUKsuMN_overloads) \
 { \
-    .options = kGAzHwmx_none, \
-    &(union kGAzHwmx_args) \
+    .options = ddUKsuMN_none, \
+    &(union ddUKsuMN_args) \
     { \
         NULL \
     } \
 })
 
 /* overloading of methods with parameters */
-#define kGAzHwmx_new(option, ...) \
-kGAzHwmx_ \
-(&(struct kGAzHwmx_overloads) \
+#define ddUKsuMN_new(option, ...) \
+ddUKsuMN_ \
+(&(struct ddUKsuMN_overloads) \
 { \
-    .options = CAT(kGAzHwmx_new_,option), \
-    &(union kGAzHwmx_args) \
+    .options = CAT(ddUKsuMN_new_,option), \
+    &(union ddUKsuMN_args) \
     { \
         .CAT(new_,option)= {__VA_ARGS__} \
     } \
 })
 
-#endif //kGAzHwmx_H
+#endif //ddUKsuMN_H

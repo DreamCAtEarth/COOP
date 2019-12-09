@@ -1,87 +1,150 @@
 #include <stdlib.h>
 
-#define private_coop_object_start
 #include "Object.h"
 
+#define package_coop_start
 #include "coop.h"
 
+#define CLASS Object
+#define INSTANCE_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, char *, protectedAttribute) \
+    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, char *, privateAttribute) \
+    ATTRIBUTE(private, double, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public static, void , setClassName, const char *) \
+    METHOD_CD(public static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private static, const char *, className)
+#define CLASS_DEFINITION kGAzHwmx
 #include "../objectModel.h"
 
-static struct Object_ *self = NULL;
+static void manageOverloads(struct Object *, struct kGAzHwmx_overloads *);
 
-static struct Object *new(void);
-static void setPrivateAttribute(char *,struct Object *);
-static char *getPrivateAttribute(struct Object *);
-static void setProtectedAttribute(char *,struct Object *);
-static char *getProtectedAttribute(struct Object *);
-static void setClassName(char *);
-static char *getClassName();
-
-void coop_Object(void)
+struct kGAzHwmx *kGAzHwmx_(struct kGAzHwmx_overloads *args)
 {
-    self = (struct Object_ *)malloc(sizeof(struct Object_));
-    self->Object = (struct coop_Object_ *)malloc(sizeof(struct coop_Object_));
+    if(!self) create();
+    if(args == NULL) return NULL;
 
-    self->className = "Object A";
+    try(struct Object *this = malloc(sizeof(struct Object)))
+    {
+        struct Exception exception = goodAllocationObject(this);
+        if(exception.severity != success) goto catch; else goto reprise;
+    }
+    catch(exception)
+    {
+        /* Affichage de l'erreur à l'utilisateur */
+        exit(0);
+    }
+    reprise:
 
-    coop.Object = self->Object;
-    coop.newObject = (void *)new;
-
-    coop.Object->setPrivateAttribute = (void *)setPrivateAttribute;
-    coop.Object->getPrivateAttribute = (void *)getPrivateAttribute;
-    coop.Object->setProtectedAttribute = (void *)setProtectedAttribute;
-    coop.Object->getProtectedAttribute = (void *)getProtectedAttribute;
-    coop.Object->setClassName = (void *)setClassName;
-    coop.Object->getClassName = (void *)getClassName;
-
-    storePointer(self->Object);
-    storePointer(self);
-}
-
-static struct Object *new(void)
-{
-    struct Object *this = (struct Object *)malloc(sizeof(struct Object));
-    this->Object = (struct coop_Object *)this;
-
-    this->Object->publicAttribute = "B public coop";
-
+    manageOverloads(this, args);
     this->class = self;
 
-    this->packageAttribute = "B package";
-    this->protectedAttribute = "B protected";
-    this->privateAttribute = "B private";
-
-    storePointer(this);
-
-    return this;
+    store_instance(this);
+    return (struct kGAzHwmx *) this;
 }
 
-static void setPrivateAttribute(char *string, struct Object *this)
+static void create(void)
+{
+    try(self = malloc(sizeof(struct Object_)))
+    {
+        struct Exception thrownException = goodAllocationClass(self);
+        if(thrownException.severity != success) goto catch; else goto reprise;
+    }
+    catch(exception)
+    {
+        /* Affichage de l'erreur à l'utilisateur */
+        exit(0);
+    }
+    reprise:
+    CLASS_DESCRIPTOR
+    self->className = __CLASS_NAME__;
+
+    store_instance(self);
+    coop.Object = self;
+}
+
+static void manageOverloads(struct Object *this, struct kGAzHwmx_overloads *args)
+{
+    switch(args->options)
+    {
+        case kGAzHwmx_new_o1 :
+            this->publicAttribute = args->overloads->new_o1.arg1;
+            this->packageAttribute = args->overloads->new_o1.arg2;
+            this->protectedAttribute = args->overloads->new_o1.arg3;
+            this->privateAttribute = args->overloads->new_o1.arg4;
+            break;
+        case kGAzHwmx_new_o2 :
+            this->alternativePublicAttribute = args->overloads->new_o2.arg1;
+            this->alternativePackageAttribute = args->overloads->new_o2.arg2;
+            this->alternativeProtectedAttribute = args->overloads->new_o2.arg3;
+            this->alternativePrivateAttribute = args->overloads->new_o2.arg4;
+            break;
+        case kGAzHwmx_none :
+            break;
+        default:
+            break;
+    }
+}
+
+static void setPrivateAttribute(struct Object *this, char *string)
 {
     this->privateAttribute = string;
 }
 
-static char *getPrivateAttribute(struct Object *this)
+static char *getPrivateAttribute(struct Object *this, ...)
 {
     return this->privateAttribute;
 }
 
-static void setProtectedAttribute(char *string, struct Object *this)
+static void setProtectedAttribute(struct Object *this, char *string)
 {
     this->protectedAttribute = string;
 }
 
-static char *getProtectedAttribute(struct Object *this)
+static char *getProtectedAttribute(struct Object *this, ...)
 {
     return this->protectedAttribute;
 }
 
-static void setClassName(char *string)
+static void setClassName(struct Object_ *self_, const char *string)
 {
-    self->className = string;
+    self_->className = string;
 }
 
-static char *getClassName()
+static const char *getClassName(struct Object_ *self_, ...)
 {
-    return self->className;
+    return self_->className;
+}
+
+static void setAlternativePrivateAttribute(struct Object *this, double floatingNumber)
+{
+    this->alternativePrivateAttribute = floatingNumber;
+}
+
+static double getAlternativePrivateAttribute(struct Object *this,...)
+{
+    return this->alternativePrivateAttribute;
+}
+
+static void setAlternativeProtectedAttribute(struct Object *this, char character)
+{
+    this->alternativeProtectedAttribute = character;
+}
+
+static char getAlternativeProtectedAttribute(struct Object *this, ...)
+{
+    return this->alternativeProtectedAttribute;
 }

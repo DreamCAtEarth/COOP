@@ -2,19 +2,29 @@
 #define COOP_H
 
 #include "Object.h"
+#include "Derived.h"
+
+#if defined(package_coop_start) && !defined(package_coop_stop)
 
 struct coop
 {
-    struct coop_Object_ *Object;
-    struct coop_Object *(* newObject)(void);
-};
+    struct Object_ *Object;
+    struct Derived_ *Derived;
+}coop;
 
-void newClassesFromCoop(void);
+#define package_coop_stop
+#else
 
-struct coop coop;
+struct coop
+{
+    struct kGAzHwmx_ *Object;
+    struct ddUKsuMN_ *Derived;
+}coop;
 
-#define coop_OBJECT struct coop_Object *
+#endif
 
-//&(coop_Object_OverrideConstructor) { .sentinel = DEFAULT_VA_ARGS_VALUE, __VA_ARGS__ }
+/* declaration of new classes or new OO types for variables */
+#define kGAz_Hwmx struct kGAzHwmx *
+#define ddUK_suMN struct ddUKsuMN *
 
 #endif //COOP_H

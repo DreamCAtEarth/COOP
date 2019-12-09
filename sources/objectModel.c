@@ -1,26 +1,21 @@
 #include <stdlib.h>
 
-#include "coop/coop.h"
-#include "util/util.h"
-
 #include "objectModel.h"
 
-void pre_start_coop(void)
-{
-    nbInstances=0;
-    newClassesFromCoop();
-    newClassesFromUtil();
-}
+#define NB_MAX_INSTANCES 100
 
-void storePointer(void *instance)
+static int nbInstances = 0;
+static void *instancesIds[NB_MAX_INSTANCES];
+
+void store_instance(void *instance)
 {
     instancesIds[nbInstances] = instance;
     nbInstances++;
 }
 
-void post_end_coop(void)
+void garbage_collector(void)
 {
-    int i=0;
-    for(i=0;i<nbInstances;i++)
+    for (int i = 0; i < nbInstances; i++)
         free(instancesIds[i]);
+    nbInstances = 0;
 }
