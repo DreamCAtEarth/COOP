@@ -1,12 +1,12 @@
-#ifndef ddUKsuMN_H
-#define ddUKsuMN_H
+#ifndef lbdtYEkR_H
+#define lbdtYEkR_H
 
 #define protected_kGAzHwmx_start
 #include "Object.h"
 
-#if defined(protected_ddUKsuMN_start) && !defined(protected_ddUKsuMN_stop)
+#if defined(protected_lbdtYEkR_start) && !defined(protected_lbdtYEkR_stop)
 
-#define CLASS Derived
+#define CLASS Another
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -32,10 +32,10 @@
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
-#define protected_ddUKsuMN_stop
-#elif (defined(package_ddUKsuMN_start) && !defined(package_ddUKsuMN_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
+#define protected_lbdtYEkR_stop
+#elif (defined(package_lbdtYEkR_start) && !defined(package_lbdtYEkR_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
 
-#define CLASS Derived
+#define CLASS Another
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -61,10 +61,10 @@
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
-#define package_ddUKsuMN_stop
+#define package_lbdtYEkR_stop
 #endif
 
-#define CLASS ddUKsuMN
+#define CLASS lbdtYEkR
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -90,57 +90,8 @@
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
-struct ddUKsuMN_overloads
-{
-    enum ddUKsuMN_options
-    {
-        ddUKsuMN_new_o1,
-        ddUKsuMN_new_o2,
-        ddUKsuMN_none
-    }options;
-    union ddUKsuMN_args
-    {
-        struct ddUKsuMN_new_o1
-        {
-            char *arg1;
-            char *arg2;
-            char *arg3;
-        }new_o1;
-        struct ddUKsuMN_new_o2
-        {
-            int arg1;
-            float arg2;
-            char arg3;
-        }new_o2;
-    }*overloads;
-};
+struct lbdtYEkR *lbdtYEkR_(void *);
 
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *);
+#define lbdtYEkR_new(...) _Generic((__VA_ARGS__+0), void * : lbdtYEkR_(NULL), default : lbdtYEkR_((void *) 1))
 
-/* overloading of methods without parameters */
-/* default constructor */
-#define ddUKsuMN_new_() \
-ddUKsuMN_ \
-(&(struct ddUKsuMN_overloads) \
-{ \
-    .options = ddUKsuMN_none, \
-    &(union ddUKsuMN_args) \
-    { \
-        NULL \
-    } \
-})
-
-/* overloading of methods with parameters */
-/* parametred constructor */
-#define ddUKsuMN_new(option, ...) \
-ddUKsuMN_ \
-(&(struct ddUKsuMN_overloads) \
-{ \
-    .options = CAT(ddUKsuMN_new_,option), \
-    &(union ddUKsuMN_args) \
-    { \
-        .CAT(new_,option)= {__VA_ARGS__} \
-    } \
-})
-
-#endif //ddUKsuMN_H
+#endif

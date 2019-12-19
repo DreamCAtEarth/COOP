@@ -1,12 +1,14 @@
-#ifndef ddUKsuMN_H
-#define ddUKsuMN_H
+#ifndef YPnOLrQT_H
+#define YPnOLrQT_H
 
-#define protected_kGAzHwmx_start
-#include "Object.h"
+#define protected_ddUKsuMN_start
+#include "Derived.h"
+#define protected_lbdtYEkR_start
+#include "Another.h"
 
-#if defined(protected_ddUKsuMN_start) && !defined(protected_ddUKsuMN_stop)
+#if defined(protected_YPnOLrQT_start) && !defined(protected_YPnOLrQT_stop)
 
-#define CLASS Derived
+#define CLASS Another
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -28,14 +30,16 @@
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
+    METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
+    METHOD_CD_R(protected_static, _Derived, void, useCustom, ...) \
+    METHOD_CD_R(package_static, _Another, void, absCustom, ...) \
+    METHOD_CD_R(protected_static, _Another, void, useCustom, ...)
 #include "../objectModel.h"
 
-#define protected_ddUKsuMN_stop
-#elif (defined(package_ddUKsuMN_start) && !defined(package_ddUKsuMN_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
+#define protected_YPnOLrQT_stop
+#elif (defined(package_YPnOLrQT_start) && !defined(package_YPnOLrQT_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
 
-#define CLASS Derived
+#define CLASS Another
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -57,14 +61,16 @@
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
+    METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
+    ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
+    METHOD_CD_R(package_static, _Another, void, absCustom, ...) \
+    ATTRIBUTE_R(protected_static_method, _Another, ENCAPSULATED, useCustom)
 #include "../objectModel.h"
 
-#define package_ddUKsuMN_stop
+#define package_YPnOLrQT_stop
 #endif
 
-#define CLASS ddUKsuMN
+#define CLASS YPnOLrQT
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -86,61 +92,14 @@
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
+    ATTRIBUTE_R(package_static_method, _Derived, ENCAPSULATED, absCustom) \
+    ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
+    ATTRIBUTE_R(package_static_method, _Another, ENCAPSULATED, absCustom) \
+    ATTRIBUTE_R(protected_static_method, _Another, ENCAPSULATED, useCustom)
 #include "../objectModel.h"
 
-struct ddUKsuMN_overloads
-{
-    enum ddUKsuMN_options
-    {
-        ddUKsuMN_new_o1,
-        ddUKsuMN_new_o2,
-        ddUKsuMN_none
-    }options;
-    union ddUKsuMN_args
-    {
-        struct ddUKsuMN_new_o1
-        {
-            char *arg1;
-            char *arg2;
-            char *arg3;
-        }new_o1;
-        struct ddUKsuMN_new_o2
-        {
-            int arg1;
-            float arg2;
-            char arg3;
-        }new_o2;
-    }*overloads;
-};
+struct YPnOLrQT *YPnOLrQT_(void *);
 
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *);
+#define YPnOLrQT_new(...) _Generic((__VA_ARGS__+0), void * : YPnOLrQT_(NULL), default : YPnOLrQT_((void *) 1))
 
-/* overloading of methods without parameters */
-/* default constructor */
-#define ddUKsuMN_new_() \
-ddUKsuMN_ \
-(&(struct ddUKsuMN_overloads) \
-{ \
-    .options = ddUKsuMN_none, \
-    &(union ddUKsuMN_args) \
-    { \
-        NULL \
-    } \
-})
-
-/* overloading of methods with parameters */
-/* parametred constructor */
-#define ddUKsuMN_new(option, ...) \
-ddUKsuMN_ \
-(&(struct ddUKsuMN_overloads) \
-{ \
-    .options = CAT(ddUKsuMN_new_,option), \
-    &(union ddUKsuMN_args) \
-    { \
-        .CAT(new_,option)= {__VA_ARGS__} \
-    } \
-})
-
-#endif //ddUKsuMN_H
+#endif //YPnOLrQT_H

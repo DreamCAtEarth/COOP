@@ -1,12 +1,11 @@
 #include <stdlib.h>
 
-#include "Derived.h"
-#define DIRECT_SUPER_CLASS kGAzHwmx
+#include "Geometric.h"
 
 #define package_coop_start
 #include "coop.h"
 
-#define CLASS Derived
+#define CLASS Geometric
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -28,88 +27,55 @@
     PARENT_METHOD_ID(public, coop.Object, char *, getProtectedAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
-#define CLASS_DEFINITION ddUKsuMN
+    MIMR_CD(package_static, _Derived, coop.Derived, void, absCustom, ...) \
+    MIMR_CD(protected_static, _Derived, coop.Derived, void, useCustom, ...) \
+    MIMR_CD(package_static, _Another, coop.Another, void, absCustom, ...) \
+    MIMR_CD(protected_static, _Another, coop.Another, void, useCustom, ...)
+#define CLASS_DEFINITION YPnOLrQT
 #include "../objectModel.h"
 
-static void manageOverloads(struct Derived *, struct ddUKsuMN_overloads *);
-
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *args)
+struct YPnOLrQT *YPnOLrQT_(void *arg)
 {
     if(!self)
     {
-        super(NULL);
+        /* héritage multiple */
+        ddUKsuMN_(NULL);
+        lbdtYEkR_(NULL);
         create();
     }
-    if(args == NULL) return NULL;
+    if(arg == NULL) return NULL;
 
-    try(struct Derived *this = malloc(sizeof(struct Derived)))
+    try(struct Geometric *this = malloc(sizeof(struct Geometric)))
     {
         struct Exception exception = goodAllocationInstance(this);
         if(exception.severity != success) goto catch; else goto reprise;
     }
     catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
         exit(0);
-    }
     reprise:
+    this->protectedAttribute = "lol";
+    this->packageAttribute = "salut 2";
+    this->publicAttribute = "mdr !!";
 
-    manageOverloads(this, args);
     this->class = self;
 
     store_instance(this);
-    return (struct ddUKsuMN *) this;
+    return (struct YPnOLrQT *) this;
 }
 
 static void create(void)
 {
-    try(self = malloc(sizeof(struct Derived_)))
+    try(self = malloc(sizeof(struct Geometric_)))
     {
         struct Exception thrownException = goodAllocationInstance(self);
         if(thrownException.severity != success) goto catch; else goto reprise;
     }
     catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
         exit(0);
-    }
     reprise:
     CLASS_DESCRIPTOR
 
     store_instance(self);
-    coop.Derived = self;
-    coop.Derived->setClassName(self, __CLASS_NAME__);
-}
-
-static void manageOverloads(struct Derived *this, struct ddUKsuMN_overloads *args)
-{
-    switch(args->options)
-    {
-        case ddUKsuMN_new_o1 :
-            this->publicAttribute = args->overloads->new_o1.arg1;
-            this->packageAttribute = args->overloads->new_o1.arg2;
-            this->protectedAttribute = args->overloads->new_o1.arg3;
-            break;
-        case ddUKsuMN_new_o2 :
-            this->alternativePublicAttribute = args->overloads->new_o2.arg1;
-            this->alternativePackageAttribute = args->overloads->new_o2.arg2;
-            this->alternativeProtectedAttribute = args->overloads->new_o2.arg3;
-            break;
-        case ddUKsuMN_none :
-            break;
-        default:
-            break;
-    }
-}
-
-static void absCustom(struct Derived_ *self_, ...)
-{
-    if(self_){}
-}
-
-static void useCustom(struct Derived_ *self_, ...)
-{
-    if(self_){}
+    coop.Geometric = self;
+    coop.Geometric->setClassName(self, __CLASS_NAME__);
 }

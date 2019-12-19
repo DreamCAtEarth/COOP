@@ -1,12 +1,12 @@
 #include <stdlib.h>
 
-#include "Derived.h"
+#include "Another.h"
 #define DIRECT_SUPER_CLASS kGAzHwmx
 
 #define package_coop_start
 #include "coop.h"
 
-#define CLASS Derived
+#define CLASS Another
 #define INSTANCE_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -30,86 +30,59 @@
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
-#define CLASS_DEFINITION ddUKsuMN
+#define CLASS_DEFINITION lbdtYEkR
 #include "../objectModel.h"
 
-static void manageOverloads(struct Derived *, struct ddUKsuMN_overloads *);
-
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *args)
+struct lbdtYEkR *lbdtYEkR_(void *arg)
 {
     if(!self)
     {
         super(NULL);
         create();
     }
-    if(args == NULL) return NULL;
+    if(arg == NULL) return NULL;
 
-    try(struct Derived *this = malloc(sizeof(struct Derived)))
+    try(struct Another *this = malloc(sizeof(struct Another)))
     {
         struct Exception exception = goodAllocationInstance(this);
         if(exception.severity != success) goto catch; else goto reprise;
     }
     catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
         exit(0);
-    }
     reprise:
+    this->protectedAttribute = "lol";
+    this->packageAttribute = "salut 2";
+    this->publicAttribute = "mdr !!";
 
-    manageOverloads(this, args);
     this->class = self;
 
     store_instance(this);
-    return (struct ddUKsuMN *) this;
+    return (struct lbdtYEkR *) this;
 }
 
 static void create(void)
 {
-    try(self = malloc(sizeof(struct Derived_)))
+    try(self = malloc(sizeof(struct Another_)))
     {
         struct Exception thrownException = goodAllocationInstance(self);
         if(thrownException.severity != success) goto catch; else goto reprise;
     }
     catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
         exit(0);
-    }
     reprise:
     CLASS_DESCRIPTOR
 
     store_instance(self);
-    coop.Derived = self;
-    coop.Derived->setClassName(self, __CLASS_NAME__);
+    coop.Another = self;
+    coop.Another->setClassName(self, __CLASS_NAME__);
 }
 
-static void manageOverloads(struct Derived *this, struct ddUKsuMN_overloads *args)
-{
-    switch(args->options)
-    {
-        case ddUKsuMN_new_o1 :
-            this->publicAttribute = args->overloads->new_o1.arg1;
-            this->packageAttribute = args->overloads->new_o1.arg2;
-            this->protectedAttribute = args->overloads->new_o1.arg3;
-            break;
-        case ddUKsuMN_new_o2 :
-            this->alternativePublicAttribute = args->overloads->new_o2.arg1;
-            this->alternativePackageAttribute = args->overloads->new_o2.arg2;
-            this->alternativeProtectedAttribute = args->overloads->new_o2.arg3;
-            break;
-        case ddUKsuMN_none :
-            break;
-        default:
-            break;
-    }
-}
-
-static void absCustom(struct Derived_ *self_, ...)
+static void absCustom(struct Another_ *self_, ...)
 {
     if(self_){}
 }
 
-static void useCustom(struct Derived_ *self_, ...)
+static void useCustom(struct Another_ *self_, ...)
 {
     if(self_){}
 }

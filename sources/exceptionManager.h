@@ -24,13 +24,22 @@ struct Exception
     char *description;
 };
 
-#define try(riskyThingToDo,...) riskyThingToDo;
-#define catch(...) catch:
-//#define finally finally:
+/*enum reasonOfControl
+{
+    isPossibleToAllocateANewInstance
+};
 
-struct Exception goodAllocationClass(void *);
-struct Exception goodAllocationObject(void *);
-/*Exception *tryToDoADivision(float);
+enum sortOfControl
+{
+    arrayOutOfBounds,
+    arrayOutOfIndexLimit
+};*/
+
+#define try(riskyThingsToDo, ...) riskyThingsToDo;
+
+struct Exception goodAllocationInstance(void *,...);
+struct Exception arrayInBounds(int currentIndexValue, int maxBound, ...);
+/*Exception *coherentDivision(float);
 
 void throwAbnormalProgramTermination(char *, int);*/
 

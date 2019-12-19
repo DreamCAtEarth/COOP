@@ -16,8 +16,8 @@
     ATTRIBUTE(private, char *, privateAttribute) \
     ATTRIBUTE(private, double, alternativePrivateAttribute)
 #define CLASS_DESCRIPTOR \
-    METHOD_CD(public static, void , setClassName, const char *) \
-    METHOD_CD(public static, const char *, getClassName, ...) \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
     METHOD_ID(public, void , setPrivateAttribute, char *) \
     METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
     METHOD_ID(public, char *, getPrivateAttribute, ...) \
@@ -26,7 +26,7 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private static, const char *, className)
+    ATTRIBUTE(private_static, const char *, className)
 #define CLASS_DEFINITION KPLGWrfu
 #include "../objectModel.h"
 
@@ -39,10 +39,10 @@ struct KPLGWrfu *KPLGWrfu_(struct KPLGWrfu_overloads *args)
 
     try(struct Object *this = malloc(sizeof(struct Object)))
     {
-        struct Exception exception = goodAllocationObject(this);
+        struct Exception exception = goodAllocationInstance(this);
         if(exception.severity != success) goto catch; else goto reprise;
     }
-    catch(exception)
+    catch:
     {
         /* Affichage de l'erreur à l'utilisateur */
         exit(0);
@@ -60,10 +60,10 @@ static void create(void)
 {
     try(self = malloc(sizeof(struct Object_)))
     {
-        struct Exception thrownException = goodAllocationClass(self);
+        struct Exception thrownException = goodAllocationInstance(self);
         if(thrownException.severity != success) goto catch; else goto reprise;
     }
-    catch(exception)
+    catch:
     {
         /* Affichage de l'erreur à l'utilisateur */
         exit(0);

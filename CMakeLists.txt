@@ -16,6 +16,10 @@ add_executable(COOP
         sources/coop/Object.h
         sources/coop/Derived.c
         sources/coop/Derived.h
+        sources/coop/Another.c
+        sources/coop/Another.h
+        sources/coop/Geometric.c
+        sources/coop/Geometric.h
 
         sources/util/util.h
         sources/util/Object.c

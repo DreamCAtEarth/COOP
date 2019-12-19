@@ -9,8 +9,13 @@ static void *instancesIds[NB_MAX_INSTANCES];
 
 void store_instance(void *instance)
 {
-    instancesIds[nbInstances] = instance;
-    nbInstances++;
+    try(struct Exception exception = arrayInBounds(nbInstances + 1, NB_MAX_INSTANCES))
+        if(exception.severity != success) goto catch; else goto reprise;
+    catch:
+        exit(0);
+    reprise:
+        instancesIds[nbInstances] = instance;
+        nbInstances++;
 }
 
 void garbage_collector(void)
