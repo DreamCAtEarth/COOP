@@ -1,13 +1,12 @@
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "Derived.h"
-#define DIRECT_SUPER_CLASS kGAzHwmx
 
-#define package_coop_start
+#define package_vlDzoKUd_start
 #include "coop.h"
 
 #define CLASS Derived
-#define INSTANCE_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -21,85 +20,62 @@
     PARENT_METHOD_CD(public_static, coop.Object, const char *, getClassName, ...) \
     PARENT_METHOD_ID(public, coop.Object, void , setPrivateAttribute, char *) \
     PARENT_METHOD_ID(public, coop.Object, void , setAlternativePrivateAttribute, double) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getPrivateAttribute, ...) \
+    PARENT_METHOD_ID(public, coop.Object ,char *, getPrivateAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, double, getAlternativePrivateAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, void , setProtectedAttribute, char *) \
     PARENT_METHOD_ID(public, coop.Object, void , setAlternativeProtectedAttribute, char) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
 #define CLASS_DEFINITION ddUKsuMN
 #include "../objectModel.h"
 
-static void manageOverloads(struct Derived *, struct ddUKsuMN_overloads *);
+static void manageOverloads(struct Derived *, struct CAT(CLASS_DEFINITION,_overloads) *);
 
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *args)
+struct CLASS_DEFINITION *(CLASS_DEFINITION)(struct CAT(CLASS_DEFINITION,_overloads) *args)
 {
     if(!self)
     {
-        super(NULL);
+        (kGAzHwmx)(NULL);
         create();
     }
     if(args == NULL) return NULL;
 
-    try(struct Derived *this = malloc(sizeof(struct Derived)))
-    {
-        struct Exception exception = goodAllocationInstance(this);
-        if(exception.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
-        exit(0);
-    }
-    reprise:
-
+    struct Derived *this = new(Derived);
     manageOverloads(this, args);
     this->class = self;
 
-    store_instance(this);
-    return (struct ddUKsuMN *) this;
+    return (struct CLASS_DEFINITION *) this;
 }
 
 static void create(void)
 {
-    try(self = malloc(sizeof(struct Derived_)))
-    {
-        struct Exception thrownException = goodAllocationInstance(self);
-        if(thrownException.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-    {
-        /* Affichage de l'erreur à l'utilisateur */
-        exit(0);
-    }
-    reprise:
+    self = new(Derived_);
     CLASS_DESCRIPTOR
 
-    store_instance(self);
     coop.Derived = self;
     coop.Derived->setClassName(self, __CLASS_NAME__);
 }
 
-static void manageOverloads(struct Derived *this, struct ddUKsuMN_overloads *args)
+static void manageOverloads(struct Derived *this, struct CAT(CLASS_DEFINITION,_overloads) *args)
 {
     switch(args->options)
     {
-        case ddUKsuMN_new_o1 :
-            this->publicAttribute = args->overloads->new_o1.arg1;
-            this->packageAttribute = args->overloads->new_o1.arg2;
-            this->protectedAttribute = args->overloads->new_o1.arg3;
+        case CAT(CLASS_DEFINITION,_new_o1) :
+            this->publicAttribute = args->new_o1.arg1;
+            this->packageAttribute = args->new_o1.arg2;
+            this->protectedAttribute = args->new_o1.arg3;
             break;
-        case ddUKsuMN_new_o2 :
-            this->alternativePublicAttribute = args->overloads->new_o2.arg1;
-            this->alternativePackageAttribute = args->overloads->new_o2.arg2;
-            this->alternativeProtectedAttribute = args->overloads->new_o2.arg3;
-            break;
-        case ddUKsuMN_none :
+        case CAT(CLASS_DEFINITION,_new_o2) :
+            this->alternativePublicAttribute = args->new_o2.arg1;
+            this->alternativePackageAttribute = args->new_o2.arg2;
+            this->alternativeProtectedAttribute = args->new_o2.arg3;
             break;
         default:
+            args->new_ = args->new_;
             break;
     }
 }
@@ -112,4 +88,10 @@ static void absCustom(struct Derived_ *self_, ...)
 static void useCustom(struct Derived_ *self_, ...)
 {
     if(self_){}
+}
+
+static char *getProtectedAttribute(struct Derived *this, ...)
+{
+    this->protectedAttribute = "p r o t e c t e d  a t t r i b u t e !";
+    return this->protectedAttribute;
 }

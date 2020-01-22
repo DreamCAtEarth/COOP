@@ -1,12 +1,12 @@
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "Geometric.h"
 
-#define package_coop_start
+#define package_vlDzoKUd_start
 #include "coop.h"
 
 #define CLASS Geometric
-#define INSTANCE_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -24,8 +24,9 @@
     PARENT_METHOD_ID(public, coop.Object, double, getAlternativePrivateAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, void , setProtectedAttribute, char *) \
     PARENT_METHOD_ID(public, coop.Object, void , setAlternativeProtectedAttribute, char) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getProtectedAttribute, ...) \
+    PARENT_METHOD_ID(public, coop.Derived, char *, getProtectedAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     MIMR_CD(package_static, _Derived, coop.Derived, void, absCustom, ...) \
     MIMR_CD(protected_static, _Derived, coop.Derived, void, useCustom, ...) \
@@ -34,48 +35,30 @@
 #define CLASS_DEFINITION YPnOLrQT
 #include "../objectModel.h"
 
-struct YPnOLrQT *YPnOLrQT_(void *arg)
+struct CLASS_DEFINITION *(CLASS_DEFINITION)(void *arg)
 {
     if(!self)
     {
-        /* héritage multiple */
-        ddUKsuMN_(NULL);
-        lbdtYEkR_(NULL);
+        (ddUKsuMN)(NULL);
+        (lbdtYEkR)(NULL);
         create();
     }
-    if(arg == NULL) return NULL;
+    if(arg == NULL) return arg;
 
-    try(struct Geometric *this = malloc(sizeof(struct Geometric)))
-    {
-        struct Exception exception = goodAllocationInstance(this);
-        if(exception.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-        exit(0);
-    reprise:
-    this->protectedAttribute = "lol";
+    struct Geometric *this = new(Geometric);
+    this->protectedAttribute = "lol 2";
     this->packageAttribute = "salut 2";
     this->publicAttribute = "mdr !!";
-
     this->class = self;
 
-    store_instance(this);
-    return (struct YPnOLrQT *) this;
+    return (struct CLASS_DEFINITION *) this;
 }
 
 static void create(void)
 {
-    try(self = malloc(sizeof(struct Geometric_)))
-    {
-        struct Exception thrownException = goodAllocationInstance(self);
-        if(thrownException.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-        exit(0);
-    reprise:
+    self = new(Geometric_);
     CLASS_DESCRIPTOR
 
-    store_instance(self);
     coop.Geometric = self;
     coop.Geometric->setClassName(self, __CLASS_NAME__);
 }

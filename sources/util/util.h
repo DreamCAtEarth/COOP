@@ -3,14 +3,14 @@
 
 #include "Object.h"
 
-#if defined(package_util_start) && !defined(package_util_stop)
+#if defined(package_kdzvSGAN_start) && !defined(package_kdzvSGAN_stop)
 
 struct util
 {
     struct Object_ *Object;
 }util;
 
-#define package_util_stop
+#define package_kdzvSGAN_stop
 #else
 
 struct util
@@ -19,8 +19,5 @@ struct util
 }util;
 
 #endif
-
-/* declaration of new classes or new OO types for variables */
-#define KPLG_Wrfu struct KPLGWrfu *
 
 #endif //UTIL_H

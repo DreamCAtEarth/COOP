@@ -4,68 +4,10 @@
 #define protected_kGAzHwmx_start
 #include "Object.h"
 
-#if defined(protected_ddUKsuMN_start) && !defined(protected_ddUKsuMN_stop)
+#define CLASS_DECLARATION ddUKsuMN
 
-#define CLASS Derived
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
-#include "../objectModel.h"
-
-#define protected_ddUKsuMN_stop
-#elif (defined(package_ddUKsuMN_start) && !defined(package_ddUKsuMN_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
-
-#define CLASS Derived
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
-#include "../objectModel.h"
-
-#define package_ddUKsuMN_stop
-#endif
-
-#define CLASS ddUKsuMN
-#define INSTANCE_DESCRIPTOR \
+#define CLASS CLASS_DECLARATION
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
@@ -85,62 +27,109 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
-struct ddUKsuMN_overloads
+struct CAT(CLASS_DECLARATION,_overloads)
 {
-    enum ddUKsuMN_options
+    enum CAT(CLASS_DECLARATION,_options)
     {
-        ddUKsuMN_new_o1,
-        ddUKsuMN_new_o2,
-        ddUKsuMN_none
+        CAT(CLASS_DECLARATION,_new_o1),
+        CAT(CLASS_DECLARATION,_new_o2),
+        CAT(CLASS_DECLARATION,_new_)
     }options;
-    union ddUKsuMN_args
+    union
     {
-        struct ddUKsuMN_new_o1
+        struct CAT(CLASS_DECLARATION,_new_o1)
         {
             char *arg1;
             char *arg2;
             char *arg3;
         }new_o1;
-        struct ddUKsuMN_new_o2
+        struct CAT(CLASS_DECLARATION,_new_o2)
         {
             int arg1;
             float arg2;
             char arg3;
         }new_o2;
-    }*overloads;
+        struct CAT(CLASS_DECLARATION,_new_){}new_;
+    };
 };
 
-struct ddUKsuMN *ddUKsuMN_(struct ddUKsuMN_overloads *);
+struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_overloads) *);
 
-/* overloading of methods without parameters */
-/* default constructor */
-#define ddUKsuMN_new_() \
-ddUKsuMN_ \
-(&(struct ddUKsuMN_overloads) \
-{ \
-    .options = ddUKsuMN_none, \
-    &(union ddUKsuMN_args) \
-    { \
-        NULL \
-    } \
-})
+#undef CLASS_DECLARATION
 
-/* overloading of methods with parameters */
-/* parametred constructor */
-#define ddUKsuMN_new(option, ...) \
-ddUKsuMN_ \
+#if defined(protected_ddUKsuMN_start) && !defined(protected_ddUKsuMN_stop)
+
+#define CLASS Derived
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, char *, protectedAttribute) \
+    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className) \
+    METHOD_CD(package_static, void, absCustom, ...) \
+    METHOD_CD(protected_static, void, useCustom, ...)
+#include "../objectModel.h"
+
+#define protected_ddUKsuMN_stop
+#elif (defined(package_ddUKsuMN_start) && !defined(package_ddUKsuMN_stop)) || (defined(package_vlDzoKUd_start) && !defined(package_vlDzoKUd_stop))
+
+#define CLASS Derived
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className) \
+    METHOD_CD(package_static, void, absCustom, ...) \
+    METHOD_CD(protected_static, void, useCustom, ...)
+#include "../objectModel.h"
+
+#define package_ddUKsuMN_stop
+#endif
+
+#define ddUKsuMN(option, ...) (ddUKsuMN)\
 (&(struct ddUKsuMN_overloads) \
 { \
     .options = CAT(ddUKsuMN_new_,option), \
-    &(union ddUKsuMN_args) \
-    { \
-        .CAT(new_,option)= {__VA_ARGS__} \
-    } \
+    .CAT(new_,option)= {__VA_ARGS__} \
 })
 
 #endif //ddUKsuMN_H

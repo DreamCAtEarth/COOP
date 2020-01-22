@@ -5,8 +5,9 @@
 #include "Derived.h"
 #include "Another.h"
 #include "Geometric.h"
+#include "Square.h"
 
-#if defined(package_coop_start) && !defined(package_coop_stop)
+#if defined(package_vlDzoKUd_start) && !defined(package_vlDzoKUd_stop)
 
 struct coop
 {
@@ -14,9 +15,10 @@ struct coop
     struct Derived_ *Derived;
     struct Another_ *Another;
     struct Geometric_ *Geometric;
+    struct Square_ *Square;
 }coop;
 
-#define package_coop_stop
+#define package_vlDzoKUd_stop
 #else
 
 struct coop
@@ -25,14 +27,9 @@ struct coop
     struct ddUKsuMN_ *Derived;
     struct lbdtYEkR_ *Another;
     struct YPnOLrQT_ *Geometric;
+    struct UQZwMHfN_ *Square;
 }coop;
 
 #endif
-
-/* declaration of new classes or new OO types for variables */
-#define kGAz_Hwmx struct kGAzHwmx *
-#define ddUK_suMN struct ddUKsuMN *
-#define lbdt_YEkR struct lbdtYEkR *
-#define YPnO_LrQT struct YPnOLrQT *
 
 #endif //COOP_H

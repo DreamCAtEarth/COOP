@@ -4,10 +4,12 @@
 #define protected_kGAzHwmx_start
 #include "Object.h"
 
+#define CLASS_DECLARATION lbdtYEkR
+
 #if defined(protected_lbdtYEkR_start) && !defined(protected_lbdtYEkR_stop)
 
 #define CLASS Another
-#define INSTANCE_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -27,16 +29,17 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
 #define protected_lbdtYEkR_stop
-#elif (defined(package_lbdtYEkR_start) && !defined(package_lbdtYEkR_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
+#elif (defined(package_lbdtYEkR_start) && !defined(package_lbdtYEkR_stop)) || (defined(package_vlDzoKUd_start) && !defined(package_vlDzoKUd_stop))
 
 #define CLASS Another
-#define INSTANCE_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -56,6 +59,7 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
@@ -64,8 +68,8 @@
 #define package_lbdtYEkR_stop
 #endif
 
-#define CLASS lbdtYEkR
-#define INSTANCE_DESCRIPTOR \
+#define CLASS CLASS_DECLARATION
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
@@ -85,13 +89,16 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
 #include "../objectModel.h"
 
-struct lbdtYEkR *lbdtYEkR_(void *);
+struct CLASS_DECLARATION *(CLASS_DECLARATION)(void *);
 
-#define lbdtYEkR_new(...) _Generic((__VA_ARGS__+0), void * : lbdtYEkR_(NULL), default : lbdtYEkR_((void *) 1))
+#define lbdtYEkR(...) _Generic((__VA_ARGS__+0), void * : (lbdtYEkR)(NULL), default : (lbdtYEkR)((void *) 1))
 
-#endif
+#undef CLASS_DECLARATION
+
+#endif //lbdtYEkR_H

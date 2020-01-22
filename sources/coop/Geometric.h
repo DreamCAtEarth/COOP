@@ -6,10 +6,12 @@
 #define protected_lbdtYEkR_start
 #include "Another.h"
 
+#define CLASS_DECLARATION YPnOLrQT
+
 #if defined(protected_YPnOLrQT_start) && !defined(protected_YPnOLrQT_stop)
 
-#define CLASS Another
-#define INSTANCE_DESCRIPTOR \
+#define CLASS Geometric
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -29,6 +31,7 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
     METHOD_CD_R(protected_static, _Derived, void, useCustom, ...) \
@@ -37,10 +40,10 @@
 #include "../objectModel.h"
 
 #define protected_YPnOLrQT_stop
-#elif (defined(package_YPnOLrQT_start) && !defined(package_YPnOLrQT_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
+#elif (defined(package_YPnOLrQT_start) && !defined(package_YPnOLrQT_stop)) || (defined(package_vlDzoKUd_start) && !defined(package_vlDzoKUd_stop))
 
-#define CLASS Another
-#define INSTANCE_DESCRIPTOR \
+#define CLASS Geometric
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -60,6 +63,7 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
     ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
@@ -70,8 +74,8 @@
 #define package_YPnOLrQT_stop
 #endif
 
-#define CLASS YPnOLrQT
-#define INSTANCE_DESCRIPTOR \
+#define CLASS CLASS_DECLARATION
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
@@ -91,6 +95,7 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     ATTRIBUTE_R(package_static_method, _Derived, ENCAPSULATED, absCustom) \
     ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
@@ -98,8 +103,10 @@
     ATTRIBUTE_R(protected_static_method, _Another, ENCAPSULATED, useCustom)
 #include "../objectModel.h"
 
-struct YPnOLrQT *YPnOLrQT_(void *);
+struct CLASS_DECLARATION *(CLASS_DECLARATION)(void *);
 
-#define YPnOLrQT_new(...) _Generic((__VA_ARGS__+0), void * : YPnOLrQT_(NULL), default : YPnOLrQT_((void *) 1))
+#define YPnOLrQT(...) _Generic((__VA_ARGS__+0), void * : (YPnOLrQT)(NULL), default : (YPnOLrQT)((void *) 1))
+
+#undef CLASS_DECLARATION
 
 #endif //YPnOLrQT_H

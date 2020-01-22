@@ -1,64 +1,10 @@
 #ifndef KPLGWrfu_H
 #define KPLGWrfu_H
 
-#if defined(protected_KPLGWrfu_start) && !defined(protected_KPLGWrfu_stop)
+#define CLASS_DECLARATION KPLGWrfu
 
-#define CLASS Object
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className)
-#include "../objectModel.h"
-
-#define protected_KPLGWrfu_stop
-#elif (defined(package_KPLGWrfu_start) && !defined(package_KPLGWrfu_stop)) || (defined(util_package_start) && !defined(util_package_stop) && !defined(protected_KPLGWrfu_start))
-
-#define CLASS Object
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className)
-#include "../objectModel.h"
-
-#define package_KPLGWrfu_stop
-#endif
-
-#define CLASS KPLGWrfu
-#define INSTANCE_DESCRIPTOR \
+#define CLASS CLASS_DECLARATION
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
@@ -78,60 +24,120 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className)
 #include "../objectModel.h"
 
-struct KPLGWrfu_overloads
+struct CAT(CLASS_DECLARATION,_overloads)
 {
-    enum KPLGWrfu_options
+    enum CAT(CLASS_DECLARATION,_options)
     {
-        KPLGWrfu_new_o1,
-        KPLGWrfu_new_o2,
-        KPLGWrfu_none
+        CAT(CLASS_DECLARATION,_new_o1),
+        CAT(CLASS_DECLARATION,_new_o2),
+        CAT(CLASS_DECLARATION,_new_),
+        CAT(CLASS_DECLARATION,_aMethod_o1),
+        CAT(CLASS_DECLARATION,_aMethod_o2),
+        CAT(CLASS_DECLARATION,_aMethod_)
     }options;
-    union KPLGWrfu_args
+    union
     {
-        struct KPLGWrfu_new_o1
+        struct CAT(CLASS_DECLARATION,_new_o1)
         {
             char *arg1;
             char *arg2;
             char *arg3;
             char *arg4;
+            struct UQZwMHfN *arg5;
         }new_o1;
-        struct KPLGWrfu_new_o2
+        struct CAT(CLASS_DECLARATION,_new_o2)
         {
             int arg1;
             float arg2;
             char arg3;
             double arg4;
         }new_o2;
-    }*overloads;
+        struct CAT(CLASS_DECLARATION,_aMethod_o1)
+        {
+            float arg1;
+            float arg2;
+        }aMethod_o1;
+        struct CAT(CLASS_DECLARATION,_aMethod_o2)
+        {
+            int arg1;
+            int arg2;
+        }aMethod_o2;
+        struct CAT(CLASS_DECLARATION,_new_){}new_;
+        struct CAT(CLASS_DECLARATION,_aMethod_){}aMethod_;
+    };
 };
 
-struct KPLGWrfu *KPLGWrfu_(struct KPLGWrfu_overloads *);
+struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_overloads) *);
 
-/* overloading of methods without parameters */
-#define KPLGWrfu_new_() \
-KPLGWrfu_ \
-(&(struct KPLGWrfu_overloads) \
-{ \
-    .options = KPLGWrfu_none, \
-    &(union KPLGWrfu_args) \
-    { \
-        NULL \
-    } \
-})
+#undef CLASS_DECLARATION
 
-/* overloading of methods with parameters */
-#define KPLGWrfu_new(option, ...) \
-KPLGWrfu_ \
+#if defined(protected_KPLGWrfu_start) && !defined(protected_KPLGWrfu_stop)
+
+#define CLASS Object
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, char *, protectedAttribute) \
+    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className)
+#include "../objectModel.h"
+
+#define protected_KPLGWrfu_stop
+#elif (defined(package_KPLGWrfu_start) && !defined(package_KPLGWrfu_stop)) || (defined(package_kdzvSGAN_start) && !defined(package_kdzvSGAN_stop))
+
+#define CLASS Object
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className)
+#include "../objectModel.h"
+
+#define package_KPLGWrfu_stop
+#endif
+
+#define KPLGWrfu(option, ...) (KPLGWrfu)\
 (&(struct KPLGWrfu_overloads) \
 { \
     .options = CAT(KPLGWrfu_new_,option), \
-    &(union KPLGWrfu_args) \
-    { \
-        .CAT(new_,option)= {__VA_ARGS__} \
-    } \
+    .CAT(new_,option)= {__VA_ARGS__} \
 })
 
 #endif //KPLGWrfu_H

@@ -1,13 +1,12 @@
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "Another.h"
-#define DIRECT_SUPER_CLASS kGAzHwmx
 
-#define package_coop_start
+#define package_vlDzoKUd_start
 #include "coop.h"
 
 #define CLASS Another
-#define INSTANCE_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, char *, packageAttribute) \
@@ -27,52 +26,36 @@
     PARENT_METHOD_ID(public, coop.Object, void , setAlternativeProtectedAttribute, char) \
     PARENT_METHOD_ID(public, coop.Object, char *, getProtectedAttribute, ...) \
     PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
 #define CLASS_DEFINITION lbdtYEkR
 #include "../objectModel.h"
 
-struct lbdtYEkR *lbdtYEkR_(void *arg)
+struct CLASS_DEFINITION *(CLASS_DEFINITION)(void *arg)
 {
     if(!self)
     {
-        super(NULL);
+        (kGAzHwmx)(NULL);
         create();
     }
-    if(arg == NULL) return NULL;
+    if(arg == NULL) return arg;
 
-    try(struct Another *this = malloc(sizeof(struct Another)))
-    {
-        struct Exception exception = goodAllocationInstance(this);
-        if(exception.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-        exit(0);
-    reprise:
-    this->protectedAttribute = "lol";
-    this->packageAttribute = "salut 2";
-    this->publicAttribute = "mdr !!";
-
+    struct Another *this = new(Another);
+    this->protectedAttribute = "lol 1";
+    this->packageAttribute = "salut 1";
+    this->publicAttribute = "mdr !";
     this->class = self;
 
-    store_instance(this);
-    return (struct lbdtYEkR *) this;
+    return (struct CLASS_DEFINITION *) this;
 }
 
 static void create(void)
 {
-    try(self = malloc(sizeof(struct Another_)))
-    {
-        struct Exception thrownException = goodAllocationInstance(self);
-        if(thrownException.severity != success) goto catch; else goto reprise;
-    }
-    catch:
-        exit(0);
-    reprise:
+    self = new(Another_);
     CLASS_DESCRIPTOR
 
-    store_instance(self);
     coop.Another = self;
     coop.Another->setClassName(self, __CLASS_NAME__);
 }

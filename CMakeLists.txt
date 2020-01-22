@@ -1,28 +1,38 @@
 cmake_minimum_required(VERSION 3.13)
 project(COOP C)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
+set(TARGET_NAME "COOP")
 
-add_executable(COOP
+add_executable(${TARGET_NAME}
 
         sources/main.c
-        sources/objectModel.c
         sources/objectModel.h
-        sources/exceptionManager.c
+        sources/objectModel.c
         sources/exceptionManager.h
+        sources/exceptionManager.c
 
         sources/coop/coop.h
-        sources/coop/Object.c
         sources/coop/Object.h
-        sources/coop/Derived.c
+        sources/coop/Object.c
         sources/coop/Derived.h
-        sources/coop/Another.c
+        sources/coop/Derived.c
         sources/coop/Another.h
-        sources/coop/Geometric.c
+        sources/coop/Another.c
         sources/coop/Geometric.h
+        sources/coop/Geometric.c
+        sources/coop/Square.h
+        sources/coop/Square.c
 
         sources/util/util.h
-        sources/util/Object.c
-        sources/util/Object.h)
+        sources/util/Object.h
+        sources/util/Object.c)
+
+if(MSVC)
+    target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+else()
+    target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Wconversion -pedantic)
+endif()
+# -Werror
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Main")

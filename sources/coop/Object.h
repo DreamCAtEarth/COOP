@@ -1,64 +1,10 @@
 #ifndef kGAzHwmx_H
 #define kGAzHwmx_H
 
-#if defined(protected_kGAzHwmx_start) && !defined(protected_kGAzHwmx_stop)
+#define CLASS_DECLARATION kGAzHwmx
 
-#define CLASS Object
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className)
-#include "../objectModel.h"
-
-#define protected_kGAzHwmx_stop
-#elif (defined(package_kGAzHwmx_start) && !defined(package_kGAzHwmx_stop)) || (defined(coop_package_start) && !defined(coop_package_stop))
-
-#define CLASS Object
-#define INSTANCE_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className)
-#include "../objectModel.h"
-
-#define package_kGAzHwmx_stop
-#endif
-
-#define CLASS kGAzHwmx
-#define INSTANCE_DESCRIPTOR \
+#define CLASS CLASS_DECLARATION
+#define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
     ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
@@ -78,62 +24,120 @@
     METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
     METHOD_ID(public, char *, getProtectedAttribute, ...) \
     METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className)
 #include "../objectModel.h"
 
-struct kGAzHwmx_overloads
+struct CAT(CLASS_DECLARATION,_overloads)
 {
-    enum kGAzHwmx_options
+    enum CAT(CLASS_DECLARATION,_options)
     {
-        kGAzHwmx_new_o1,
-        kGAzHwmx_new_o2,
-        kGAzHwmx_none
+        CAT(CLASS_DECLARATION,_new_o1),
+        CAT(CLASS_DECLARATION,_new_o2),
+        CAT(CLASS_DECLARATION,_new_),
+        CAT(CLASS_DECLARATION,_aMethod_o1),
+        CAT(CLASS_DECLARATION,_aMethod_o2),
+        CAT(CLASS_DECLARATION,_aMethod_)
     }options;
-    union kGAzHwmx_args
+    union
     {
-        struct kGAzHwmx_new_o1
+        struct CAT(CLASS_DECLARATION,_new_o1)
         {
             char *arg1;
             char *arg2;
             char *arg3;
             char *arg4;
+            struct UQZwMHfN *arg5;
         }new_o1;
-        struct kGAzHwmx_new_o2
+        struct CAT(CLASS_DECLARATION,_new_o2)
         {
             int arg1;
             float arg2;
             char arg3;
             double arg4;
         }new_o2;
-    }*overloads;
+        struct CAT(CLASS_DECLARATION,_aMethod_o1)
+        {
+            float arg1;
+            float arg2;
+        }aMethod_o1;
+        struct CAT(CLASS_DECLARATION,_aMethod_o2)
+        {
+            int arg1;
+            int arg2;
+        }aMethod_o2;
+        struct CAT(CLASS_DECLARATION,_new_){}new_;
+        struct CAT(CLASS_DECLARATION,_aMethod_){}aMethod_;
+    };
 };
 
-struct kGAzHwmx *kGAzHwmx_(struct kGAzHwmx_overloads *);
+struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_overloads) *);
 
-/* overloading of methods without parameters */
-/* default constructor */
-#define kGAzHwmx_new_() \
-kGAzHwmx_ \
-(&(struct kGAzHwmx_overloads) \
-{ \
-    .options = kGAzHwmx_none, \
-    &(union kGAzHwmx_args) \
-    { \
-        NULL \
-    } \
-})
+#undef CLASS_DECLARATION
 
-/* overloading of methods with parameters */
-/* parametred constructor */
-#define kGAzHwmx_new(option, ...) \
-kGAzHwmx_ \
+#if defined(protected_kGAzHwmx_start) && !defined(protected_kGAzHwmx_stop)
+
+#define CLASS Object
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, char *, protectedAttribute) \
+    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className)
+#include "../objectModel.h"
+
+#define protected_kGAzHwmx_stop
+#elif (defined(package_kGAzHwmx_start) && !defined(package_kGAzHwmx_stop)) || (defined(package_vlDzoKUd_start) && !defined(package_vlDzoKUd_stop))
+
+#define CLASS Object
+#define OBJECT_DESCRIPTOR \
+    ATTRIBUTE(public, char *, publicAttribute) \
+    ATTRIBUTE(public, int, alternativePublicAttribute) \
+    ATTRIBUTE(package, char *, packageAttribute) \
+    ATTRIBUTE(package, float, alternativePackageAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
+    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
+    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+#define CLASS_DESCRIPTOR \
+    METHOD_CD(public_static, void , setClassName, const char *) \
+    METHOD_CD(public_static, const char *, getClassName, ...) \
+    METHOD_ID(public, void , setPrivateAttribute, char *) \
+    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_ID(public, char *, getPrivateAttribute, ...) \
+    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_ID(public, void , setProtectedAttribute, char *) \
+    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_ID(public, char *, getProtectedAttribute, ...) \
+    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
+    ATTRIBUTE(private_static, ENCAPSULATED, className)
+#include "../objectModel.h"
+
+#define package_kGAzHwmx_stop
+#endif
+
+#define kGAzHwmx(option, ...) (kGAzHwmx)\
 (&(struct kGAzHwmx_overloads) \
 { \
     .options = CAT(kGAzHwmx_new_,option), \
-    &(union kGAzHwmx_args) \
-    { \
-        .CAT(new_,option)= {__VA_ARGS__} \
-    } \
+    .CAT(new_,option)= {__VA_ARGS__} \
 })
 
 #endif //kGAzHwmx_H

@@ -1,21 +1,20 @@
-/*#include <stdarg.h>*/
-
 #include "exceptionManager.h"
 
-struct Exception goodAllocationInstance(void *instance, ...)
+struct Exception goodAllocation(void *instance)
 {
     struct Exception exceptionsToThrow[2];
 
     exceptionsToThrow[0].severity = success;
 
-    exceptionsToThrow[1].id = 0x0001;
+    //exceptionsToThrow[1].id = 0x0001;
     exceptionsToThrow[1].severity = interruption;
     exceptionsToThrow[1].name = "Instance allocation failed";
-    exceptionsToThrow[1].description = "The instance was not allocated properly or not allocated at all by the operating system.";
+    //exceptionsToThrow[1].description = "The instance was not allocated properly or not allocated at all by the operating system.";
 
     return (!instance) ? exceptionsToThrow[1] : exceptionsToThrow[0];
 }
 
+/*
 struct Exception arrayInBounds(int currentIndexOrValue, int maxBound, ...)
 {
     struct Exception exceptionsToThrow[2];
@@ -30,7 +29,7 @@ struct Exception arrayInBounds(int currentIndexOrValue, int maxBound, ...)
     return (currentIndexOrValue > maxBound) ? exceptionsToThrow[1] : exceptionsToThrow[0];
 }
 
-/*Exception *coherentDivision(float divisorValue)
+Exception *coherentDivision(float divisorValue)
 {
     if(divisorValue == 0.0f) // throw
     {
@@ -46,7 +45,8 @@ struct Exception arrayInBounds(int currentIndexOrValue, int maxBound, ...)
     }
 }
 
- void throwAbnormalProgramTermination(char *fileName, int line)
+void throwAbnormalProgramTermination(char *fileName, int line)
 {
     printf("Abnormal program termination in %s at line %d\n", fileName, line);
-}*/
+}
+ */

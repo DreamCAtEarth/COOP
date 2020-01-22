@@ -3,7 +3,7 @@
 
 struct Exception
 {
-    int id;
+    //int id;
     /*enum state
     {
         init,
@@ -15,13 +15,13 @@ struct Exception
     enum severity
     {
         interruption,
-        /*error,
-        warning,
-        info,*/
+        //error,
+        //warning,
+        //info,
         success
     }severity;
     char *name;
-    char *description;
+    //char *description;
 };
 
 /*enum reasonOfControl
@@ -35,10 +35,9 @@ enum sortOfControl
     arrayOutOfIndexLimit
 };*/
 
-#define try(riskyThingsToDo, ...) riskyThingsToDo;
+#define try(riskyThingsToDo) riskyThingsToDo;
 
-struct Exception goodAllocationInstance(void *,...);
-struct Exception arrayInBounds(int currentIndexValue, int maxBound, ...);
+struct Exception goodAllocation(void *);
 /*Exception *coherentDivision(float);
 
 void throwAbnormalProgramTermination(char *, int);*/
