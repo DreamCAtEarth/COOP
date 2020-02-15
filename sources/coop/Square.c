@@ -1,51 +1,50 @@
-#include <stddef.h>
-
 #include "Square.h"
 
 #define package_vlDzoKUd_start
 #include "coop.h"
 
+#define PACKAGE coop
 #define CLASS Square
+#define SELF CAT(CLASS,_)
+#define CLASS_PUBLIC_ID UQZwMHfN
+#define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
 #define OBJECT_DESCRIPTOR \
     ATTRIBUTE(private, int, length) \
     ATTRIBUTE(private, int, width)
 #define CLASS_DESCRIPTOR \
-    METHOD_ID(public, int , area, ...)
-#define CLASS_DEFINITION UQZwMHfN
+    METHOD_OD(public, int , area, ...)
 #include "../objectModel.h"
 
-struct CLASS_DEFINITION *(CLASS_DEFINITION)(void *arg)
+struct CLASS_PUBLIC_ID *(CLASS_PUBLIC_ID)(bool arg, bool lastLevelH, struct SELF_PUBLIC_ID *that)
 {
-    if(!self) create();
-    if(arg == NULL) return arg;
+    if(!that && !lastLevelH) that = new(SELF);
+    create((struct SELF *) that);
+    if(!arg) return (void *) that;
 
-    struct Square *this = new(Square);
+    struct CLASS *this = new(CLASS);
     this->length = 4;
     this->width = 4;
-    this->class = self;
 
-    return (struct CLASS_DEFINITION *) this;
+    return (struct CLASS_PUBLIC_ID *) this;
 }
 
-static void create(void)
+static void create(struct SELF *that)
 {
-    self = new(Square_);
-    CLASS_DESCRIPTOR
-
-    coop.Square = self;
+    if(!self)
+    {
+        PACKAGE.CLASS = self = new(SELF);
+        CLASS_DESCRIPTOR
+    }
+    if(that != NULL && that != NOTNULL)
+    {
+        that->area = area;
+    }
+    #ifdef REFLEXIVITY
+        integrate_reflexivity(&reflectInfos);
+    #endif
 }
 
-static int area(struct Square *this, ...)
+static int area(struct CLASS *this, ...)
 {
-    /*struct Object *object = new(Object);
-    object->packageAttribute = "lol";
-    object->alternativeProtectedAttribute = "lol";*/
     return this->length * this->width;
 }
-
-/*static float division(struct Square *this, int numerator, int divisor)
-{
-    this->width = numerator;
-    this->length = divisor;
-    return this->width / this->length;
-}*/

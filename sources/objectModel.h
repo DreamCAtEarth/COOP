@@ -1,13 +1,25 @@
 #ifndef OBJECT_MODEL_H
 #define OBJECT_MODEL_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include <string.h>
 
 #include "exceptionManager.h"
 
-#define STR_NOEXPAND(A) #A
-#define STR(A) STR_NOEXPAND(A)
-#define CAT_NOEXPAND(A, B) A ## B
-#define CAT(A, B) CAT_NOEXPAND(A, B)
+#define STR_(A) #A
+#define STR(A) STR_(A)
+#define CAT_(A, B) A ## B
+#define CAT(A, B) CAT_(A, B)
 #define ENCAPSULATED const void * const
+#define NOTNULL (void *) ~(unsigned long long) NULL
+#define FC_WITH_OV(ov_arg) &(struct CAT(ov_arg,_overloads)){.options = CAT(ov_arg,_new_)}
+#define PC_WITH_OV NULL
+#define FC_WITHOUT_OV true
+#define PC_WITHOUT_OV false
+#define $YES true
+#define $NO false
 
 struct class
 {
@@ -20,24 +32,29 @@ struct class
     size_t *offsets;
     size_t *sizes;
     char const **names;
+    void (*print_buffer)(unsigned char *, size_t);
+    size_t (*pack)(void *, unsigned char *, struct class *);
+    size_t (*unpack)(unsigned char *, void *, struct class *);
+    void (*print_all)(void *, struct class *);
+};
+
+struct entity
+{
+    void *instance;
+    struct entity *next;
+};
+
+struct list
+{
+    struct entity *first;
+    int size;
 };
 
 void main_coop(void);
 void *(new)(size_t);
 void *(new_)(size_t);
-void integrate_reflexivity(struct class *elementsToReflect);
+void integrate_reflexivity(struct class *);
 void garbage_collector(void);
-
-struct entity
-{
-    void *instance;
-    struct class reflexivity;
-    struct entity *next;
-    void (*print_buffer)(unsigned char *, size_t);
-    size_t (*pack)(void *, unsigned char *);
-    size_t (*unpack)(unsigned char *, void *);
-    void (*print_all)(void *);
-};
 
 #define new(entity) new(sizeof(struct entity))
 #define new_(primitive) new_(sizeof(primitive))
@@ -46,52 +63,38 @@ struct entity
 
 #ifdef CLASS
 #if !defined(OBJECT_DESCRIPTOR) || !defined(CLASS_DESCRIPTOR)
-    #error "Did not define one of the two descriptors required for the definition of the class."
+    #error "The class :"
+    #pragma message STR(CLASS) " is not well described."
 #endif
 
 #define __CLASS_NAME__ STR(CLASS)
 #define class_declaration_name CAT(CLASS,_)
 #define object_declaration_name CLASS
 
+#define EXTENDS_OD(className, memberName) struct className *memberName;
+#define EXTENDS_CD(className, memberName) struct CAT(className,_) *memberName;
 #define ATTRIBUTE(visibility, type, name) type name;
 #define METHOD_CD(visibility, returnedType, name, ...) returnedType (*(name))(struct class_declaration_name *self, __VA_ARGS__);
-#define METHOD_ID(visibility, returnedType, name, ...) returnedType (*(name))(struct object_declaration_name *this, __VA_ARGS__);
-#define ATTRIBUTE_R(visibility, inheritedClass, type, name) type CAT(name,inheritedClass);
-#define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) returnedType (*(CAT(name,inheritedClass)))(struct class_declaration_name *self, __VA_ARGS__);
-#define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) returnedType (*(CAT(name,inheritedClass)))(struct object_declaration_name *this, __VA_ARGS__);
-
-#ifdef CLASS_DEFINITION
-#define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) returnedType (*(name))(struct class_declaration_name *self, __VA_ARGS__);
-#define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) returnedType (*(name))(struct object_declaration_name *this, __VA_ARGS__);
-#define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) returnedType (*(CAT(name,inheritedClass)))(struct class_declaration_name *self, __VA_ARGS__);
-#define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) returnedType (*(CAT(name,inheritedClass)))(struct object_declaration_name *this, __VA_ARGS__);
-#endif
+#define METHOD_OD(visibility, returnedType, name, ...) returnedType (*(name))(struct object_declaration_name *this, __VA_ARGS__);
 
 struct object_declaration_name
 {
-    struct class_declaration_name *class;
     OBJECT_DESCRIPTOR
 };
 
-#ifdef CLASS_DEFINITION
+#ifdef CLASS_PUBLIC_ID
 static struct class_declaration_name
 {
     CLASS_DESCRIPTOR
 }*self = NULL;
 
+#undef EXTENDS_OD
+#undef EXTENDS_CD
 #undef ATTRIBUTE
-#undef ATTRIBUTE_R
 #undef METHOD_CD
-#undef METHOD_ID
-#undef METHOD_CD_R
-#undef METHOD_ID_R
-#undef PARENT_METHOD_CD
-#undef PARENT_METHOD_ID
-#undef MIMR_CD
-#undef MIMR_ID
+#undef METHOD_OD
 
 #ifdef REFLEXIVITY
-#include <stddef.h>
 
 static struct class reflectInfos =
 {
@@ -99,200 +102,126 @@ static struct class reflectInfos =
     .num_objects = (0),
     .num_attributes =
             (
+    #define EXTENDS_OD(className, memberName)
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) 1 +
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) 1 +
     #define METHOD_CD(visibility, returnedType, name, ...)
-    #define METHOD_ID(visibility, returnedType, name, ...)
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...)
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...)
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...)
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...)
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...)
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...)
+    #define METHOD_OD(visibility, returnedType, name, ...)
         OBJECT_DESCRIPTOR
         CLASS_DESCRIPTOR
+    #undef EXTENDS_OD
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
+    #undef METHOD_OD
             0),
     .num_methods =
             (
+    #define EXTENDS_OD(className, memberName)
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name)
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name)
     #define METHOD_CD(visibility, returnedType, name, ...) 1 +
-    #define METHOD_ID(visibility, returnedType, name, ...) 1 +
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) 1 +
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) 1 +
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) 1 +
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) 1 +
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) 1 +
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) 1 +
+    #define METHOD_OD(visibility, returnedType, name, ...) 1 +
         OBJECT_DESCRIPTOR
         CLASS_DESCRIPTOR
+    #undef EXTENDS_OD
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
+    #undef METHOD_OD
             0),
     .unpacked_size = sizeof(struct class_declaration_name) + sizeof(struct object_declaration_name),
     .packed_size =
             (
+    #define EXTENDS_OD(className, memberName)
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) sizeof(type) +
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) sizeof(type) +
     #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *) +
-    #define METHOD_ID(visibility, returnedType, name, ...) sizeof(void *) +
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) sizeof(void *) +
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) sizeof(void *) +
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) sizeof(void *) +
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) sizeof(void *) +
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) sizeof(void *) +
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) sizeof(void *) +
+    #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *) +
         OBJECT_DESCRIPTOR
         CLASS_DESCRIPTOR
+    #undef EXTENDS_OD
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
+    #undef METHOD_OD
             0),
     .offsets = (size_t [])
             {
+    #define EXTENDS_OD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) offsetof(struct object_declaration_name, name),
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) offsetof(struct object_declaration_name, name),
         OBJECT_DESCRIPTOR
+    #undef EXTENDS_OD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) offsetof(struct class_declaration_name, name),
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) offsetof(struct class_declaration_name, name),
     #define METHOD_CD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define METHOD_ID(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) offsetof(struct class_declaration_name, name),
+    #define METHOD_OD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
         CLASS_DESCRIPTOR
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
+    #undef METHOD_OD
             },
     .sizes = (size_t [])
             {
+    #define EXTENDS_OD(className, memberName)
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) sizeof(type),
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) sizeof(type),
     #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *),
-    #define METHOD_ID(visibility, returnedType, name, ...) sizeof(void *),
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) sizeof(void *),
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) sizeof(void *),
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) sizeof(void *),
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) sizeof(void *),
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) sizeof(void *),
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) sizeof(void *),
+    #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *),
         OBJECT_DESCRIPTOR
         CLASS_DESCRIPTOR
+    #undef EXTENDS_OD
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
+    #undef METHOD_OD
             },
     .names = (char const *[])
             {
+    #define EXTENDS_OD(className, memberName)
+    #define EXTENDS_CD(className, memberName)
     #define ATTRIBUTE(visibility, type, name) #type " : " #name ,
-    #define ATTRIBUTE_R(visibility, inheritedClass, type, name) #type " : " #name ,
     #define METHOD_CD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define METHOD_ID(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
+    #define METHOD_OD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
         OBJECT_DESCRIPTOR
         CLASS_DESCRIPTOR
+    #undef EXTENDS_OD
+    #undef EXTENDS_CD
     #undef ATTRIBUTE
-    #undef ATTRIBUTE_R
     #undef METHOD_CD
-    #undef METHOD_ID
-    #undef METHOD_CD_R
-    #undef METHOD_ID_R
-    #undef PARENT_METHOD_CD
-    #undef PARENT_METHOD_ID
-    #undef MIMR_CD
-    #undef MIMR_ID
-            }
+    #undef METHOD_OD
+            },
+    .print_buffer = NULL,
+    .pack = NULL,
+    .unpack = NULL,
+    .print_all = NULL
 };
 
 #endif
 
+#define EXTENDS_OD(className, memberName)
+#define EXTENDS_CD(className, memberName)
 #define ATTRIBUTE(visibility, type, name)
-#define ATTRIBUTE_R(visibility, inheritedClass, type, name)
 #define METHOD_CD(visibility, returnedType, name, ...) static returnedType name(struct class_declaration_name *, __VA_ARGS__);
-#define METHOD_ID(visibility, returnedType, name, ...) static returnedType name(struct object_declaration_name *, __VA_ARGS__);
-#define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) static returnedType CAT(name,inheritedClass)(struct class_declaration_name *, __VA_ARGS__);
-#define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) static returnedType CAT(name,inheritedClass)(struct object_declaration_name *, __VA_ARGS__);
-#define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...)
-#define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...)
-#define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...)
-#define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...)
+#define METHOD_OD(visibility, returnedType, name, ...) static returnedType name(struct object_declaration_name *, __VA_ARGS__);
 
 OBJECT_DESCRIPTOR
 CLASS_DESCRIPTOR
+static void create(struct class_declaration_name *);
 
-static void create(void);
-
+#undef EXTENDS_OD
+#undef EXTENDS_CD
 #undef ATTRIBUTE
-#undef ATTRIBUTE_R
 #undef METHOD_CD
-#undef METHOD_ID
-#undef METHOD_CD_R
-#undef METHOD_ID_R
-#undef PARENT_METHOD_CD
-#undef PARENT_METHOD_ID
-#undef MIMR_CD
-#undef MIMR_ID
+#undef METHOD_OD
 
+#define EXTENDS_OD(className, memberName)
+#define EXTENDS_CD(className, memberName)
 #define ATTRIBUTE(visibility, type, name)
-#define ATTRIBUTE_R(visibility, type, name)
 #define METHOD_CD(visibility, returnedType, name, ...) self->name = name;
-#define METHOD_ID(visibility, returnedType, name, ...) self->name = name;
-#define METHOD_CD_R(visibility, inheritedClass, returnedType, name, ...) self->name = CAT(name,inheritedClass);
-#define METHOD_ID_R(visibility, inheritedClass, returnedType, name, ...) self->name = CAT(name,inheritedClass);
-#define PARENT_METHOD_CD(visibility, PackageAndClassPath, returnedType, name, ...) self->name = (returnedType (*) (struct class_declaration_name *, __VA_ARGS__)) PackageAndClassPath->name;
-#define PARENT_METHOD_ID(visibility, PackageAndClassPath, returnedType, name, ...) self->name = (returnedType (*) (struct object_declaration_name *, __VA_ARGS__)) PackageAndClassPath->name;
-#define MIMR_CD(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) self->CAT(name,inheritedClass) = (returnedType (*) (struct class_declaration_name *, __VA_ARGS__)) PackageAndClassPath->name;
-#define MIMR_ID(visibility, inheritedClass, PackageAndClassPath, returnedType, name, ...) self->CAT(name,inheritedClass) = (returnedType (*) (struct object_declaration_name *, __VA_ARGS__)) PackageAndClassPath->name;
+#define METHOD_OD(visibility, returnedType, name, ...) self->name = name;
 
 #else
 struct class_declaration_name
@@ -303,12 +232,11 @@ struct class_declaration_name
 #undef class_declaration_name
 #undef object_declaration_name
 
+#undef EXTENDS_OD
+#undef EXTENDS_CD
 #undef ATTRIBUTE
-#undef ATTRIBUTE_R
 #undef METHOD_CD
-#undef METHOD_ID
-#undef METHOD_CD_R
-#undef METHOD_ID_R
+#undef METHOD_OD
 
 #undef CLASS_DESCRIPTOR
 #undef OBJECT_DESCRIPTOR
@@ -317,5 +245,30 @@ struct class_declaration_name
 #undef CLASS
 
 #endif
+#elif defined(INTERFACE)
+
+#ifndef IMPLEMENTS
+    #warning "The interface :"
+    #pragma message STR(NAME) " is not implemented."
+#else
+#define METHOD_R(returnedType, inheritedClass, name, ...) returnedType (*(CAT(name,inheritedClass)))(__VA_ARGS__);
+
+struct IMPLEMENTS
+{
+    INTERFACE
+};
+
+#undef METHOD_R
+
+#define METHOD_R(returnedType, inheritedClass, name, ...) static returnedType CAT(name,inheritedClass)(__VA_ARGS__);
+
+INTERFACE
+
+#undef IMPLEMENTS
+#undef METHOD_R
 
 #endif
+
+#undef NAME
+#undef INTERFACE
+#endif //CLASS OR INTERFACE

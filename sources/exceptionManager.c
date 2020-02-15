@@ -6,10 +6,10 @@ struct Exception goodAllocation(void *instance)
 
     exceptionsToThrow[0].severity = success;
 
-    //exceptionsToThrow[1].id = 0x0001;
+    exceptionsToThrow[1].id = 0x0001;
     exceptionsToThrow[1].severity = interruption;
     exceptionsToThrow[1].name = "Instance allocation failed";
-    //exceptionsToThrow[1].description = "The instance was not allocated properly or not allocated at all by the operating system.";
+    exceptionsToThrow[1].description = "The instance was not allocated properly or not allocated at all by the operating system.";
 
     return (!instance) ? exceptionsToThrow[1] : exceptionsToThrow[0];
 }
@@ -31,7 +31,7 @@ struct Exception arrayInBounds(int currentIndexOrValue, int maxBound, ...)
 
 Exception *coherentDivision(float divisorValue)
 {
-    if(divisorValue == 0.0f) // throw
+    if(divisorValue == 0.0f)
     {
         exceptionToThrow.id = 0xFA3;
         exceptionToThrow.severityLevel = error;

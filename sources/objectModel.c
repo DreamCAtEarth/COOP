@@ -1,19 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "objectModel.h"
 
-static struct list
-{
-    struct entity *first;
-    int size;
-}list = {.first = NULL, .size = 0};
+static struct list list = {.first = NULL, .size = 0};
 
-static void print_buffer(unsigned char *buffer, size_t size);
-static size_t pack(void *class, unsigned char *buffer);
-static size_t unpack(unsigned char *buffer, void *class);
-static void print_all(void *class);
+static void print_buffer(unsigned char *, size_t);
+static size_t pack(void *, unsigned char *, struct class *);
+static size_t unpack(unsigned char *, void *, struct class *);
+static void print_all(void *, struct class *);
 
 void *(new)(size_t size)
 {
@@ -51,22 +43,10 @@ void *(new_)(size_t size)
 
 void integrate_reflexivity(struct class *elementsToReflect)
 {
-    list.first->reflexivity = (struct class)
-    {
-         elementsToReflect->name,
-         elementsToReflect->num_objects,
-         elementsToReflect->num_attributes,
-         elementsToReflect->num_methods,
-         elementsToReflect->unpacked_size,
-         elementsToReflect->packed_size,
-         elementsToReflect->offsets,
-         elementsToReflect->sizes,
-         elementsToReflect->names
-    };
-    list.first->print_buffer = print_buffer;
-    list.first->pack = pack;
-    list.first->unpack = unpack;
-    list.first->print_all = print_all;
+    elementsToReflect->print_buffer = print_buffer;
+    elementsToReflect->pack = pack;
+    elementsToReflect->unpack = unpack;
+    elementsToReflect->print_all = print_all;
 }
 
 static void print_buffer(unsigned char *buffer, size_t size)
@@ -75,36 +55,38 @@ static void print_buffer(unsigned char *buffer, size_t size)
         printf(" %02x", buffer[j]);
 }
 
-static size_t pack(void *class, unsigned char *buffer)
+static size_t pack(void *class, unsigned char *buffer, struct class *elementsToReflect)
 {
-    size_t pos = 0, num_members = list.first->reflexivity.num_attributes + list.first->reflexivity.num_methods;
+    size_t pos = 0, num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
     for (size_t i = 0; i < num_members; i++)
     {
-        memcpy(buffer+pos, ((unsigned char*)class)+list.first->reflexivity.offsets[i], list.first->reflexivity.sizes[i]);
-        pos += list.first->reflexivity.sizes[i];
+        memcpy(buffer+pos, ((unsigned char*)class)+elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
+        pos += elementsToReflect->sizes[i];
     }
     return pos;
 }
 
-static size_t unpack(unsigned char *buffer, void *class)
+static size_t unpack(unsigned char *buffer, void *class, struct class *elementsToReflect)
 {
-    size_t pos = 0, num_members = list.first->reflexivity.num_attributes + list.first->reflexivity.num_methods;
+    size_t pos = 0, num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
     for (size_t i = 0; i < num_members; i++)
     {
-        memcpy(((unsigned char*)class)+list.first->reflexivity.offsets[i], buffer+pos, list.first->reflexivity.sizes[i]);
-        pos += list.first->reflexivity.sizes[i];
+        memcpy(((unsigned char*)class)+elementsToReflect->offsets[i], buffer+pos, elementsToReflect->sizes[i]);
+        pos += elementsToReflect->sizes[i];
     }
     return pos;
 }
 
-static void print_all(void *class)
+static void print_all(void *class, struct class *elementsToReflect)
 {
-    size_t num_members = list.first->reflexivity.num_attributes + list.first->reflexivity.num_methods;
-    printf("%s:\n", list.first->reflexivity.name);
+    size_t num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
+    printf("%s:\n", elementsToReflect->name);
     for (size_t i = 0; i < num_members; i++)
     {
-        printf("\t%s: %zu %zu =", list.first->reflexivity.names[i], list.first->reflexivity.offsets[i], list.first->reflexivity.sizes[i]);
-        print_buffer(((unsigned char*)class)+list.first->reflexivity.offsets[i], list.first->reflexivity.sizes[i]);
+        // %I64u for minGW using unsigned int of 64 bits
+        // %zu or %llu for gcc in a real linux machine
+        //printf("\t%s: %I64u %I64u =", elementsToReflect->names[i], elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
+        print_buffer(((unsigned char*)class)+elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
         printf("\n");
     }
 }

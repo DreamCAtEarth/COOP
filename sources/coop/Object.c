@@ -1,11 +1,16 @@
-#include <stdio.h>
-
 #include "Object.h"
 
 #define package_vlDzoKUd_start
 #include "coop.h"
 
+#define PACKAGE coop
 #define CLASS Object
+#define SELF CAT(CLASS,_)
+#define CLASS_PUBLIC_ID kGAzHwmx
+#define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
+#define CLASS_PUBLIC_ID_OV CAT(CLASS_PUBLIC_ID,_overloads)
+#define REFLEXIVITY
+
 #define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -18,91 +23,98 @@
 #define CLASS_DESCRIPTOR \
     METHOD_CD(public_static, void , setClassName, const char *) \
     METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    METHOD_ID(private, float, aMethod, struct kGAzHwmx_overloads *) \
+    METHOD_OD(public, void , setPrivateAttribute, char *) \
+    METHOD_OD(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_OD(public, char *, getPrivateAttribute, ...) \
+    METHOD_OD(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_OD(public, void , setProtectedAttribute, char *) \
+    METHOD_OD(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_OD(public, char *, getProtectedAttribute, ...) \
+    METHOD_OD(public, char, getAlternativeProtectedAttribute, ...) \
+    METHOD_OD(private, float, aMethod, struct kGAzHwmx_overloads *) \
     ATTRIBUTE(private_static, const char *, className)
-#define CLASS_DEFINITION kGAzHwmx
-#define REFLEXIVITY
 #include "../objectModel.h"
 
-#define kGAzHwmx_$_aMethod(option, ...) coop.Object->aMethod \
+/*#define kGAzHwmx_$_aMethod(option, ...) PACKAGE.CLASS->aMethod \
 ( this, \
 &(struct kGAzHwmx_overloads) \
 { \
     .options = CAT(kGAzHwmx_aMethod_,option), \
     .CAT(aMethod_,option)= {__VA_ARGS__} \
 } \
-)
+)*/
 
-static void *manageOverloads(struct Object *, struct CAT(CLASS_DEFINITION,_overloads) *);
+static void *manageOverloads(struct CLASS *, struct CLASS_PUBLIC_ID_OV *);
 
-struct CLASS_DEFINITION *(CLASS_DEFINITION)(struct CAT(CLASS_DEFINITION,_overloads) *args)
+struct CLASS_PUBLIC_ID *(CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID_OV *args, bool lastLevelH, struct SELF_PUBLIC_ID *that)
 {
-    if(!self) create();
-    if(args == NULL) return NULL;
+    if(!that && !lastLevelH) that = new(SELF);
+    create((struct SELF *) that);
+    if(args == NULL) return (void *) that;
 
-    struct Object *this = new(Object);
+    struct CLASS *this = new(CLASS);
     manageOverloads(this, args);
-    this->class = self;
 
-    float o = kGAzHwmx_$_aMethod(o1, 3.4f, 3.6f);
+    /*float o = kGAzHwmx_$_aMethod(o1, 3.4f, 3.6f);
     int a = (int) kGAzHwmx_$_aMethod(o2, 5, 3);
     printf("%f\n", kGAzHwmx_$_aMethod(o1, o, o));
-    printf("%d\n", (int)kGAzHwmx_$_aMethod(o2, a, a));
+    printf("%d\n", (int)kGAzHwmx_$_aMethod(o2, a, a));*/
 
-    struct Square *square = (struct Square *) UQZwMHfN();
-
-    printf("%d\n", square->class->area(square));
-
-    //kGAzHwmx_$_aMethod();
-
-    return (struct CLASS_DEFINITION *) this;
+    return (struct CLASS_PUBLIC_ID *) this;
 }
 
-static void create(void)
+static void create(struct SELF *that)
 {
-    self = new(Object_);
-    CLASS_DESCRIPTOR
-
-    self->className = __CLASS_NAME__;
-    coop.Object = self;
-
+    if(!self)
+    {
+        PACKAGE.CLASS = self = new(SELF);
+        CLASS_DESCRIPTOR
+        self->className = __CLASS_NAME__;
+    }
+    if(that != NULL && that != NOTNULL)
+    {
+        that->setClassName = setClassName;
+        that->getClassName = getClassName;
+        that->setPrivateAttribute = setPrivateAttribute;
+        that->setAlternativePrivateAttribute = setAlternativePrivateAttribute;
+        that->getPrivateAttribute = getPrivateAttribute;
+        that->getAlternativePrivateAttribute = getAlternativePrivateAttribute;
+        that->setProtectedAttribute = setProtectedAttribute;
+        that->setAlternativeProtectedAttribute = setAlternativeProtectedAttribute;
+        that->getProtectedAttribute = getProtectedAttribute;
+        that->getAlternativeProtectedAttribute = getAlternativeProtectedAttribute;
+        that->aMethod = aMethod;
+        that->className = self->className;
+    }
     #ifdef REFLEXIVITY
-    integrate_reflexivity(&reflectInfos);
+        integrate_reflexivity(&reflectInfos);
     #endif
 }
 
-static void *manageOverloads(struct Object *this, struct CAT(CLASS_DEFINITION,_overloads) *args)
+static void *manageOverloads(struct CLASS *this, struct CLASS_PUBLIC_ID_OV *args)
 {
     switch(args->options)
     {
-        case CAT(CLASS_DEFINITION,_new_o1) :
+        case CAT(CLASS_PUBLIC_ID,_new_o1) :
             this->publicAttribute = args->new_o1.arg1;
             this->packageAttribute = args->new_o1.arg2;
             this->protectedAttribute = args->new_o1.arg3;
             this->privateAttribute = args->new_o1.arg4;
             args->new_o1.arg5 = args->new_o1.arg5;
             break;
-        case CAT(CLASS_DEFINITION,_new_o2) :
+        case CAT(CLASS_PUBLIC_ID,_new_o2) :
             this->alternativePublicAttribute = args->new_o2.arg1;
             this->alternativePackageAttribute = args->new_o2.arg2;
             this->alternativeProtectedAttribute = args->new_o2.arg3;
             this->alternativePrivateAttribute = args->new_o2.arg4;
             break;
-        case CAT(CLASS_DEFINITION,_aMethod_o1) :
+        case CAT(CLASS_PUBLIC_ID,_aMethod_o1) :
         {
             float *result = new_(float);
             *result = args->aMethod_o1.arg1 + args->aMethod_o1.arg2;
             return result;
         }
-        case CAT(CLASS_DEFINITION,_aMethod_o2) :
+        case CAT(CLASS_PUBLIC_ID,_aMethod_o2) :
         {
             int *result = new_(int);
             *result = args->aMethod_o2.arg1 * args->aMethod_o2.arg2;
@@ -114,57 +126,57 @@ static void *manageOverloads(struct Object *this, struct CAT(CLASS_DEFINITION,_o
     return NULL;
 }
 
-static void setPrivateAttribute(struct Object *this, char *string)
+static void setPrivateAttribute(struct CLASS *this, char *string)
 {
     this->privateAttribute = string;
 }
 
-static char *getPrivateAttribute(struct Object *this, ...)
+static char *getPrivateAttribute(struct CLASS *this, ...)
 {
     return this->privateAttribute;
 }
 
-static void setProtectedAttribute(struct Object *this, char *string)
+static void setProtectedAttribute(struct CLASS *this, char *string)
 {
     this->protectedAttribute = string;
 }
 
-static char *getProtectedAttribute(struct Object *this, ...)
+static char *getProtectedAttribute(struct CLASS *this, ...)
 {
     return this->protectedAttribute;
 }
 
-static void setClassName(struct Object_ *self_, const char *string)
+static void setClassName(struct SELF *that, const char *string)
 {
-    self_->className = string;
+    that->className = string;
 }
 
-static const char *getClassName(struct Object_ *self_, ...)
+static const char *getClassName(struct SELF *that, ...)
 {
-    return self_->className;
+    return that->className;
 }
 
-static void setAlternativePrivateAttribute(struct Object *this, double floatingNumber)
+static void setAlternativePrivateAttribute(struct CLASS *this, double floatingNumber)
 {
     this->alternativePrivateAttribute = floatingNumber;
 }
 
-static double getAlternativePrivateAttribute(struct Object *this,...)
+static double getAlternativePrivateAttribute(struct CLASS *this,...)
 {
     return this->alternativePrivateAttribute;
 }
 
-static void setAlternativeProtectedAttribute(struct Object *this, char character)
+static void setAlternativeProtectedAttribute(struct CLASS *this, char character)
 {
     this->alternativeProtectedAttribute = character;
 }
 
-static char getAlternativeProtectedAttribute(struct Object *this, ...)
+static char getAlternativeProtectedAttribute(struct CLASS *this, ...)
 {
     return this->alternativeProtectedAttribute;
 }
 
-static float aMethod(struct Object *this, struct CAT(CLASS_DEFINITION,_overloads) *args)
+static float aMethod(struct CLASS *this, struct CLASS_PUBLIC_ID_OV *args)
 {
     return *(float *) manageOverloads(this, args);
 }

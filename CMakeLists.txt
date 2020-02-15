@@ -13,6 +13,7 @@ add_executable(${TARGET_NAME}
         sources/exceptionManager.c
 
         sources/coop/coop.h
+        sources/coop/coop.c
         sources/coop/Object.h
         sources/coop/Object.c
         sources/coop/Derived.h
@@ -24,15 +25,21 @@ add_executable(${TARGET_NAME}
         sources/coop/Square.h
         sources/coop/Square.c
 
+        sources/coop/lang/lang.h
+        sources/coop/lang/Bool.h
+        sources/coop/lang/Bool.c
+        sources/coop/lang/ToTest.h
+
         sources/util/util.h
         sources/util/Object.h
-        sources/util/Object.c)
+        sources/util/Object.c
+        )
 
 if(MSVC)
     target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
 else()
-    target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Wconversion -pedantic)
+    target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Wconversion)
 endif()
-# -Werror
+# -pedantic -Werror
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Main")

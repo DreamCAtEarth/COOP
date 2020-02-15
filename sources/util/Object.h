@@ -1,9 +1,10 @@
 #ifndef KPLGWrfu_H
 #define KPLGWrfu_H
 
-#define CLASS_DECLARATION KPLGWrfu
+#define _CLASS_PUBLIC_ID_ KPLGWrfu
+#define __CLASS_PUBLIC_ID__ CAT(_CLASS_PUBLIC_ID_,_)
 
-#define CLASS CLASS_DECLARATION
+#define CLASS _CLASS_PUBLIC_ID_
 #define OBJECT_DESCRIPTOR \
     ATTRIBUTE(public, char *, publicAttribute) \
     ATTRIBUTE(public, int, alternativePublicAttribute) \
@@ -16,32 +17,32 @@
 #define CLASS_DESCRIPTOR \
     METHOD_CD(public_static, void , setClassName, const char *) \
     METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    METHOD_OD(public, void , setPrivateAttribute, char *) \
+    METHOD_OD(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_OD(public, char *, getPrivateAttribute, ...) \
+    METHOD_OD(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_OD(public, void , setProtectedAttribute, char *) \
+    METHOD_OD(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_OD(public, char *, getProtectedAttribute, ...) \
+    METHOD_OD(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className)
 #include "../objectModel.h"
 
-struct CAT(CLASS_DECLARATION,_overloads)
+struct CAT(_CLASS_PUBLIC_ID_,_overloads)
 {
-    enum CAT(CLASS_DECLARATION,_options)
+    enum CAT(_CLASS_PUBLIC_ID_,_options)
     {
-        CAT(CLASS_DECLARATION,_new_o1),
-        CAT(CLASS_DECLARATION,_new_o2),
-        CAT(CLASS_DECLARATION,_new_),
-        CAT(CLASS_DECLARATION,_aMethod_o1),
-        CAT(CLASS_DECLARATION,_aMethod_o2),
-        CAT(CLASS_DECLARATION,_aMethod_)
+        CAT(_CLASS_PUBLIC_ID_,_new_o1),
+        CAT(_CLASS_PUBLIC_ID_,_new_o2),
+        CAT(_CLASS_PUBLIC_ID_,_new_),
+        CAT(_CLASS_PUBLIC_ID_,_aMethod_o1),
+        CAT(_CLASS_PUBLIC_ID_,_aMethod_o2),
+        CAT(_CLASS_PUBLIC_ID_,_aMethod_)
     }options;
     union
     {
-        struct CAT(CLASS_DECLARATION,_new_o1)
+        struct CAT(_CLASS_PUBLIC_ID_,_new_o1)
         {
             char *arg1;
             char *arg2;
@@ -49,31 +50,32 @@ struct CAT(CLASS_DECLARATION,_overloads)
             char *arg4;
             struct UQZwMHfN *arg5;
         }new_o1;
-        struct CAT(CLASS_DECLARATION,_new_o2)
+        struct CAT(_CLASS_PUBLIC_ID_,_new_o2)
         {
             int arg1;
             float arg2;
             char arg3;
             double arg4;
         }new_o2;
-        struct CAT(CLASS_DECLARATION,_aMethod_o1)
+        struct CAT(_CLASS_PUBLIC_ID_,_aMethod_o1)
         {
             float arg1;
             float arg2;
         }aMethod_o1;
-        struct CAT(CLASS_DECLARATION,_aMethod_o2)
+        struct CAT(_CLASS_PUBLIC_ID_,_aMethod_o2)
         {
             int arg1;
             int arg2;
         }aMethod_o2;
-        struct CAT(CLASS_DECLARATION,_new_){}new_;
-        struct CAT(CLASS_DECLARATION,_aMethod_){}aMethod_;
+        struct CAT(_CLASS_PUBLIC_ID_,_new_){}new_;
+        struct CAT(_CLASS_PUBLIC_ID_,_aMethod_){}aMethod_;
     };
 };
 
-struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_overloads) *);
+struct _CLASS_PUBLIC_ID_ *(_CLASS_PUBLIC_ID_)(struct CAT(_CLASS_PUBLIC_ID_,_overloads) *, bool, struct __CLASS_PUBLIC_ID__ *);
 
-#undef CLASS_DECLARATION
+#undef _CLASS_PUBLIC_ID_
+#undef __CLASS_PUBLIC_ID__
 
 #if defined(protected_KPLGWrfu_start) && !defined(protected_KPLGWrfu_stop)
 
@@ -90,14 +92,14 @@ struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_over
 #define CLASS_DESCRIPTOR \
     METHOD_CD(public_static, void , setClassName, const char *) \
     METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    METHOD_OD(public, void , setPrivateAttribute, char *) \
+    METHOD_OD(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_OD(public, char *, getPrivateAttribute, ...) \
+    METHOD_OD(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_OD(public, void , setProtectedAttribute, char *) \
+    METHOD_OD(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_OD(public, char *, getProtectedAttribute, ...) \
+    METHOD_OD(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className)
 #include "../objectModel.h"
@@ -118,14 +120,14 @@ struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_over
 #define CLASS_DESCRIPTOR \
     METHOD_CD(public_static, void , setClassName, const char *) \
     METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
+    METHOD_OD(public, void , setPrivateAttribute, char *) \
+    METHOD_OD(public, void , setAlternativePrivateAttribute, double) \
+    METHOD_OD(public, char *, getPrivateAttribute, ...) \
+    METHOD_OD(public, double, getAlternativePrivateAttribute, ...) \
+    METHOD_OD(public, void , setProtectedAttribute, char *) \
+    METHOD_OD(public, void , setAlternativeProtectedAttribute, char) \
+    METHOD_OD(public, char *, getProtectedAttribute, ...) \
+    METHOD_OD(public, char, getAlternativeProtectedAttribute, ...) \
     ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
     ATTRIBUTE(private_static, ENCAPSULATED, className)
 #include "../objectModel.h"
@@ -138,6 +140,6 @@ struct CLASS_DECLARATION *(CLASS_DECLARATION)(struct CAT(CLASS_DECLARATION,_over
 { \
     .options = CAT(KPLGWrfu_new_,option), \
     .CAT(new_,option)= {__VA_ARGS__} \
-})
+}, $YES, NULL)
 
 #endif //KPLGWrfu_H

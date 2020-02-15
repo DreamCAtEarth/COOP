@@ -4,6 +4,7 @@
       <w>abstractelement</w>
       <w>caracter</w>
       <w>hierarchyhandler</w>
+      <w>htable</w>
       <w>hwmx</w>
       <w>inheritate</w>
       <w>inheritence</w>
@@ -11,6 +12,7 @@
       <w>lbdt</w>
       <w>memcpy</w>
       <w>noexpand</w>
+      <w>nrmi</w>
       <w>objectmodel</w>
       <w>offsetof</w>
       <w>parametred</w>
@@ -18,6 +20,7 @@
       <w>printf</w>
       <w>priv</w>
       <w>prot</w>
+      <w>vtable</w>
       <w>wrfu</w>
       <w>zncg</w>
     </words>

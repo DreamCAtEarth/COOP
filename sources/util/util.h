@@ -1,5 +1,5 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef kdzvSGAN_H
+#define kdzvSGAN_H
 
 #include "Object.h"
 
@@ -13,11 +13,11 @@ struct util
 #define package_kdzvSGAN_stop
 #else
 
-struct util
+struct kdzvSGAN
 {
     struct KPLGWrfu_ *Object;
 }util;
 
 #endif
 
-#endif //UTIL_H
+#endif //kdzvSGAN_H

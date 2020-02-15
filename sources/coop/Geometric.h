@@ -6,37 +6,27 @@
 #define protected_lbdtYEkR_start
 #include "Another.h"
 
-#define CLASS_DECLARATION YPnOLrQT
+#define _CLASS_PUBLIC_ID_ YPnOLrQT
+#define __CLASS_PUBLIC_ID__ CAT(YPnOLrQT,_)
+
+#define CLASS _CLASS_PUBLIC_ID_
+#define OBJECT_DESCRIPTOR \
+    EXTENDS_OD(ddUKsuMN, Derived) \
+    EXTENDS_OD(lbdtYEkR, Another)
+#define CLASS_DESCRIPTOR \
+    EXTENDS_CD(ddUKsuMN, Derived) \
+    EXTENDS_CD(lbdtYEkR, Another)
+#include "../objectModel.h"
 
 #if defined(protected_YPnOLrQT_start) && !defined(protected_YPnOLrQT_stop)
 
 #define CLASS Geometric
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(Derived, Derived) \
+    EXTENDS_OD(Another, Another)
 #define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
-    METHOD_CD_R(protected_static, _Derived, void, useCustom, ...) \
-    METHOD_CD_R(package_static, _Another, void, absCustom, ...) \
-    METHOD_CD_R(protected_static, _Another, void, useCustom, ...)
+    EXTENDS_CD(Derived, Derived) \
+    EXTENDS_CD(Another, Another)
 #include "../objectModel.h"
 
 #define protected_YPnOLrQT_stop
@@ -44,69 +34,21 @@
 
 #define CLASS Geometric
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(Derived, Derived) \
+    EXTENDS_OD(Another, Another)
 #define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD_R(package_static, _Derived, void, absCustom, ...) \
-    ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
-    METHOD_CD_R(package_static, _Another, void, absCustom, ...) \
-    ATTRIBUTE_R(protected_static_method, _Another, ENCAPSULATED, useCustom)
+    EXTENDS_CD(Derived, Derived) \
+    EXTENDS_CD(Another, Another)
 #include "../objectModel.h"
 
 #define package_YPnOLrQT_stop
 #endif
 
-#define CLASS CLASS_DECLARATION
-#define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
-    ATTRIBUTE(package, ENCAPSULATED, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    ATTRIBUTE_R(package_static_method, _Derived, ENCAPSULATED, absCustom) \
-    ATTRIBUTE_R(protected_static_method, _Derived, ENCAPSULATED, useCustom) \
-    ATTRIBUTE_R(package_static_method, _Another, ENCAPSULATED, absCustom) \
-    ATTRIBUTE_R(protected_static_method, _Another, ENCAPSULATED, useCustom)
-#include "../objectModel.h"
+struct _CLASS_PUBLIC_ID_ *(_CLASS_PUBLIC_ID_)(bool, bool, struct __CLASS_PUBLIC_ID__ *);
 
-struct CLASS_DECLARATION *(CLASS_DECLARATION)(void *);
+#undef _CLASS_PUBLIC_ID_
+#undef __CLASS_PUBLIC_ID__
 
-#define YPnOLrQT(...) _Generic((__VA_ARGS__+0), void * : (YPnOLrQT)(NULL), default : (YPnOLrQT)((void *) 1))
-
-#undef CLASS_DECLARATION
+#define YPnOLrQT() (YPnOLrQT)(FC_WITHOUT_OV, $YES, NULL)
 
 #endif //YPnOLrQT_H

@@ -1,71 +1,67 @@
-#include <stddef.h>
-
 #include "Another.h"
 
 #define package_vlDzoKUd_start
 #include "coop.h"
 
+#define PACKAGE coop
 #define CLASS Another
+#define SELF CAT(CLASS,_)
+#define CLASS_PUBLIC_ID lbdtYEkR
+#define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
+#define SUPER Object
+#define PARENT CAT(SUPER,_)
+#define SUPER_PUBLIC_ID kGAzHwmx
+#define PARENT_PUBLIC_ID CAT(SUPER_PUBLIC_ID,_)
+
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(SUPER, SUPER)
 #define CLASS_DESCRIPTOR \
-    PARENT_METHOD_CD(public_static, coop.Object, void , setClassName, const char *) \
-    PARENT_METHOD_CD(public_static, coop.Object, const char *, getClassName, ...) \
-    PARENT_METHOD_ID(public, coop.Object, void , setPrivateAttribute, char *) \
-    PARENT_METHOD_ID(public, coop.Object, void , setAlternativePrivateAttribute, double) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getPrivateAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, double, getAlternativePrivateAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, void , setProtectedAttribute, char *) \
-    PARENT_METHOD_ID(public, coop.Object, void , setAlternativeProtectedAttribute, char) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getProtectedAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
+    EXTENDS_CD(SUPER, SUPER) \
     METHOD_CD(package_static, void, absCustom, ...) \
     METHOD_CD(protected_static, void, useCustom, ...)
-#define CLASS_DEFINITION lbdtYEkR
 #include "../objectModel.h"
 
-struct CLASS_DEFINITION *(CLASS_DEFINITION)(void *arg)
+struct CLASS_PUBLIC_ID *(CLASS_PUBLIC_ID)(bool arg, bool lastLevelH, struct SELF_PUBLIC_ID *that)
+{
+    if(!that && !lastLevelH)
+    {
+        that = new(SELF);
+        that->SUPER = (struct PARENT_PUBLIC_ID *)(SUPER_PUBLIC_ID)(PC_WITH_OV, $NO, NULL);
+    }
+    create((struct SELF *) that);
+    if(!arg) return (void *) that;
+
+    struct CLASS *this = new(CLASS);
+    this->SUPER = (struct SUPER *)(SUPER_PUBLIC_ID)(FC_WITH_OV(SUPER_PUBLIC_ID), $NO, NOTNULL);
+
+    return (struct CLASS_PUBLIC_ID *) this;
+}
+
+static void create(struct SELF *that)
 {
     if(!self)
     {
-        (kGAzHwmx)(NULL);
-        create();
+        PACKAGE.CLASS = self = new(SELF);
+        CLASS_DESCRIPTOR
+        self->SUPER = (struct PARENT *)(SUPER_PUBLIC_ID)(PC_WITH_OV, $NO, NULL);
+        self->SUPER->setClassName(self->SUPER, __CLASS_NAME__);
     }
-    if(arg == NULL) return arg;
-
-    struct Another *this = new(Another);
-    this->protectedAttribute = "lol 1";
-    this->packageAttribute = "salut 1";
-    this->publicAttribute = "mdr !";
-    this->class = self;
-
-    return (struct CLASS_DEFINITION *) this;
+    if(that != NULL && that != NOTNULL)
+    {
+        that->absCustom = absCustom;
+        that->useCustom = useCustom;
+    }
+    #ifdef REFLEXIVITY
+        integrate_reflexivity(&reflectInfos);
+    #endif
 }
 
-static void create(void)
+static void absCustom(struct SELF *that, ...)
 {
-    self = new(Another_);
-    CLASS_DESCRIPTOR
-
-    coop.Another = self;
-    coop.Another->setClassName(self, __CLASS_NAME__);
+    if(that){}
 }
 
-static void absCustom(struct Another_ *self_, ...)
+static void useCustom(struct SELF *that, ...)
 {
-    if(self_){}
-}
-
-static void useCustom(struct Another_ *self_, ...)
-{
-    if(self_){}
+    if(that){}
 }

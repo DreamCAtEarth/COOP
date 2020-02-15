@@ -1,64 +1,64 @@
-#include <stddef.h>
-
 #include "Geometric.h"
 
 #define package_vlDzoKUd_start
 #include "coop.h"
 
+#define PACKAGE coop
 #define CLASS Geometric
+#define SELF CAT(CLASS,_)
+#define CLASS_PUBLIC_ID YPnOLrQT
+#define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
+#define SUPER_A Derived
+#define SUPER_B Another
+#define PARENT_A CAT(SUPER_A,_)
+#define PARENT_B CAT(SUPER_B,_)
+#define SUPER_PUBLIC_ID_A ddUKsuMN
+#define SUPER_PUBLIC_ID_B lbdtYEkR
+#define PARENT_PUBLIC_ID_A CAT(SUPER_PUBLIC_ID_A,_)
+#define PARENT_PUBLIC_ID_B CAT(SUPER_PUBLIC_ID_B,_)
+
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(SUPER_A, SUPER_A) \
+    EXTENDS_OD(SUPER_B, SUPER_B)
 #define CLASS_DESCRIPTOR \
-    PARENT_METHOD_CD(public_static, coop.Object, void , setClassName, const char *) \
-    PARENT_METHOD_CD(public_static, coop.Object, const char *, getClassName, ...) \
-    PARENT_METHOD_ID(public, coop.Object, void , setPrivateAttribute, char *) \
-    PARENT_METHOD_ID(public, coop.Object, void , setAlternativePrivateAttribute, double) \
-    PARENT_METHOD_ID(public, coop.Object, char *, getPrivateAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, double, getAlternativePrivateAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, void , setProtectedAttribute, char *) \
-    PARENT_METHOD_ID(public, coop.Object, void , setAlternativeProtectedAttribute, char) \
-    PARENT_METHOD_ID(public, coop.Derived, char *, getProtectedAttribute, ...) \
-    PARENT_METHOD_ID(public, coop.Object, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    MIMR_CD(package_static, _Derived, coop.Derived, void, absCustom, ...) \
-    MIMR_CD(protected_static, _Derived, coop.Derived, void, useCustom, ...) \
-    MIMR_CD(package_static, _Another, coop.Another, void, absCustom, ...) \
-    MIMR_CD(protected_static, _Another, coop.Another, void, useCustom, ...)
-#define CLASS_DEFINITION YPnOLrQT
+    EXTENDS_CD(SUPER_A, SUPER_A) \
+    EXTENDS_CD(SUPER_B, SUPER_B)
 #include "../objectModel.h"
 
-struct CLASS_DEFINITION *(CLASS_DEFINITION)(void *arg)
+struct CLASS_PUBLIC_ID *(CLASS_PUBLIC_ID)(bool arg, bool lastLevelH, struct SELF_PUBLIC_ID *that)
+{
+    if(!that && !lastLevelH)
+    {
+        that = new(SELF);
+        that->SUPER_A = (struct PARENT_PUBLIC_ID_A *)(SUPER_PUBLIC_ID_A)(PC_WITH_OV, $NO, NULL);
+        that->SUPER_B = (struct PARENT_PUBLIC_ID_B *)(SUPER_PUBLIC_ID_B)(PC_WITHOUT_OV, $NO, NULL);
+    }
+    create((struct SELF *)that);
+    if(!arg) return (void *) that;
+
+    struct CLASS *this = new(CLASS);
+    this->SUPER_A = (struct SUPER_A *)(SUPER_PUBLIC_ID_A)(FC_WITH_OV(SUPER_PUBLIC_ID_A), $NO, NOTNULL);
+    this->SUPER_B = (struct SUPER_B *)(SUPER_PUBLIC_ID_B)(FC_WITHOUT_OV, $NO, NOTNULL);
+
+    return (struct CLASS_PUBLIC_ID *) this;
+}
+
+static void create(struct SELF *that)
 {
     if(!self)
     {
-        (ddUKsuMN)(NULL);
-        (lbdtYEkR)(NULL);
-        create();
+        PACKAGE.CLASS = self = new(SELF);
+        CLASS_DESCRIPTOR
+        self->SUPER_A = (struct PARENT_A *)(SUPER_PUBLIC_ID_A)(PC_WITH_OV, $NO, NULL);
+        self->SUPER_B = (struct PARENT_B *)(SUPER_PUBLIC_ID_B)(PC_WITH_OV, $NO, NULL);
+        self->SUPER_A->Object->setClassName(self->SUPER_A->Object, __CLASS_NAME__);
+        self->SUPER_B->Object->setClassName(self->SUPER_B->Object, __CLASS_NAME__);
     }
-    if(arg == NULL) return arg;
+    if(that != NULL && that != NOTNULL)
+    {
 
-    struct Geometric *this = new(Geometric);
-    this->protectedAttribute = "lol 2";
-    this->packageAttribute = "salut 2";
-    this->publicAttribute = "mdr !!";
-    this->class = self;
-
-    return (struct CLASS_DEFINITION *) this;
-}
-
-static void create(void)
-{
-    self = new(Geometric_);
-    CLASS_DESCRIPTOR
-
-    coop.Geometric = self;
-    coop.Geometric->setClassName(self, __CLASS_NAME__);
+    }
+    #ifdef REFLEXIVITY
+        integrate_reflexivity(&reflectInfos);
+    #endif
 }

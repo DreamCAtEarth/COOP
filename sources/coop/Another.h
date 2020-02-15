@@ -4,35 +4,27 @@
 #define protected_kGAzHwmx_start
 #include "Object.h"
 
-#define CLASS_DECLARATION lbdtYEkR
+#define _CLASS_PUBLIC_ID_ lbdtYEkR
+#define __CLASS_PUBLIC_ID__ CAT(_CLASS_PUBLIC_ID_,_)
+
+#define CLASS _CLASS_PUBLIC_ID_
+#define OBJECT_DESCRIPTOR \
+    EXTENDS_OD(kGAzHwmx, Object)
+#define CLASS_DESCRIPTOR \
+    EXTENDS_CD(kGAzHwmx, Object) \
+    ATTRIBUTE(package_static_method, ENCAPSULATED, absCustom) \
+    ATTRIBUTE(protected_static_method, ENCAPSULATED, useCustom)
+#include "../objectModel.h"
 
 #if defined(protected_lbdtYEkR_start) && !defined(protected_lbdtYEkR_stop)
 
 #define CLASS Another
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, char *, protectedAttribute) \
-    ATTRIBUTE(protected, char, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(Object, Object)
 #define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
+    EXTENDS_CD(Object, Object) \
+    METHOD_CD(package_static_method, void, absCustom, ...) \
+    METHOD_CD(protected_static_method, void, useCustom, ...)
 #include "../objectModel.h"
 
 #define protected_lbdtYEkR_stop
@@ -40,65 +32,21 @@
 
 #define CLASS Another
 #define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, char *, packageAttribute) \
-    ATTRIBUTE(package, float, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
+    EXTENDS_OD(Object, Object)
 #define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
+    EXTENDS_CD(Object, Object) \
     METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
+    ATTRIBUTE(protected_static_method, ENCAPSULATED, useCustom)
 #include "../objectModel.h"
 
 #define package_lbdtYEkR_stop
 #endif
 
-#define CLASS CLASS_DECLARATION
-#define OBJECT_DESCRIPTOR \
-    ATTRIBUTE(public, char *, publicAttribute) \
-    ATTRIBUTE(public, int, alternativePublicAttribute) \
-    ATTRIBUTE(package, ENCAPSULATED, packageAttribute) \
-    ATTRIBUTE(package, ENCAPSULATED, alternativePackageAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, protectedAttribute) \
-    ATTRIBUTE(protected, ENCAPSULATED, alternativeProtectedAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, privateAttribute) \
-    ATTRIBUTE(private, ENCAPSULATED, alternativePrivateAttribute)
-#define CLASS_DESCRIPTOR \
-    METHOD_CD(public_static, void , setClassName, const char *) \
-    METHOD_CD(public_static, const char *, getClassName, ...) \
-    METHOD_ID(public, void , setPrivateAttribute, char *) \
-    METHOD_ID(public, void , setAlternativePrivateAttribute, double) \
-    METHOD_ID(public, char *, getPrivateAttribute, ...) \
-    METHOD_ID(public, double, getAlternativePrivateAttribute, ...) \
-    METHOD_ID(public, void , setProtectedAttribute, char *) \
-    METHOD_ID(public, void , setAlternativeProtectedAttribute, char) \
-    METHOD_ID(public, char *, getProtectedAttribute, ...) \
-    METHOD_ID(public, char, getAlternativeProtectedAttribute, ...) \
-    ATTRIBUTE(private_method, ENCAPSULATED, aMethod) \
-    ATTRIBUTE(private_static, ENCAPSULATED, className) \
-    METHOD_CD(package_static, void, absCustom, ...) \
-    METHOD_CD(protected_static, void, useCustom, ...)
-#include "../objectModel.h"
+struct _CLASS_PUBLIC_ID_ *(_CLASS_PUBLIC_ID_)(bool, bool, struct __CLASS_PUBLIC_ID__ *);
 
-struct CLASS_DECLARATION *(CLASS_DECLARATION)(void *);
+#undef _CLASS_PUBLIC_ID_
+#undef __CLASS_PUBLIC_ID__
 
-#define lbdtYEkR(...) _Generic((__VA_ARGS__+0), void * : (lbdtYEkR)(NULL), default : (lbdtYEkR)((void *) 1))
-
-#undef CLASS_DECLARATION
+#define lbdtYEkR() (lbdtYEkR)(FC_WITHOUT_OV, $YES, NULL)
 
 #endif //lbdtYEkR_H

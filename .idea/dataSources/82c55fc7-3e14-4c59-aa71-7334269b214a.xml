@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="Master@127.0.0.1">
-  <database-model serializer="dbm" dbms="MSSQL" family-id="MSSQL" format-version="4.14">
+  <database-model serializer="dbm" dbms="MSSQL" family-id="MSSQL" format-version="4.17">
     <root id="1">
       <ServerVersion>10.50.2500</ServerVersion>
     </root>
     <database id="2" parent="1" name="master">
       <ObjectId>1</ObjectId>
       <Current>1</Current>
-      <Visible>1</Visible>
       <Collation>French_CI_AS</Collation>
     </database>
     <database id="3" parent="1" name="model">
@@ -56,7 +55,6 @@
       <ObjectId>1</ObjectId>
       <IntrospectionTimestamp>2018-12-26.04:35:56.097</IntrospectionTimestamp>
       <Current>1</Current>
-      <Visible>1</Visible>
     </schema>
     <schema id="17" parent="2" name="guest">
       <ObjectId>2</ObjectId>
