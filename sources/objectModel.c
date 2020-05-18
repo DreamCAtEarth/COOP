@@ -1,64 +1,118 @@
 #include "objectModel.h"
 
-static struct list list = {.first = NULL, .size = 0};
-
-static void print_buffer(unsigned char *, size_t);
+static int countDimensions(const char *);
+static void extractLengths(const char *, int, size_t []);
+static void printBuffer(unsigned char *, size_t);
 static size_t pack(void *, unsigned char *, struct class *);
 static size_t unpack(unsigned char *, void *, struct class *);
-static void print_all(void *, struct class *);
+static void printAll(void *class, struct class *);
 
-void *(new)(size_t size)
+void *(new)(struct new_args *args)
 {
-    try(struct entity *entity = malloc(sizeof(struct entity)))
-    try(void *instance = malloc(size))
+    size_t sizeToAlloc = args->getSize(NULL);
+
+    int dimensions = countDimensions(args->strDimensionsAndLengths);
+    size_t *lengths = NULL;
+    if(dimensions > 0)
     {
-        struct Exception exception1 = goodAllocation(entity);
-        struct Exception exception2 = goodAllocation(instance);
-        if(exception1.severity != success || exception2.severity != success) goto catch;
-        else goto reprise;
+        lengths = malloc(sizeof(size_t) * (unsigned long long) dimensions);
+        extractLengths(args->strDimensionsAndLengths, dimensions, lengths);
+
+        for(int i = 1; i <= dimensions; ++i)
+        {
+            assert(lengths[i - 1]);
+            sizeToAlloc *= lengths[i - 1];
+        }
     }
-    catch:
-    exit(0);
-
-    reprise:
-    entity->instance = instance;
-    entity->next = list.first;
-    list.first = entity;
-    list.size++;
-
-    return instance;
+    struct object *object = malloc(sizeof(struct object) + sizeToAlloc);
+    *object = (struct object)
+            {
+                    .destructor = args->destructor,
+                    .name = args->objectName,
+                    .instance = object + 1,
+                    .dimensions = dimensions,
+                    .lengths = lengths,
+                    .totalSize = sizeToAlloc
+            };
+    args->constructor(object->instance, args->instance_args);
+    return object->instance;
 }
 
-void *(new_)(size_t size)
+struct object *(find)(void *object)
 {
-    try(void *primitive = malloc(size))
-    {
-        struct Exception exception = goodAllocation(primitive);
-        if(exception.severity != success) goto catch;
-        else return primitive;
-    }
-    catch:
-    exit(0);
+    void **instance = (void **) object;
+
+    if (*instance == NULL) return NULL;
+    struct object *metadata = *instance - sizeof (struct object);
+    assert(*instance == metadata->instance); // instance shall be a pointer returned by new
+
+    return metadata;
 }
 
-void integrate_reflexivity(struct class *elementsToReflect)
+void (delete)(void *object)
 {
-    elementsToReflect->print_buffer = print_buffer;
+    void **instance = object;
+
+    if (*instance == NULL) return;
+    struct object *metadata = *instance - sizeof (struct object);
+    assert(*instance == metadata->instance);
+    metadata->destructor();
+
+    if(metadata->dimensions > 0 && metadata->lengths != NULL)
+        free(metadata->lengths);
+    free(metadata);
+}
+
+void (reflex)(struct class *elementsToReflect)
+{
+    elementsToReflect->printBuffer = printBuffer;
     elementsToReflect->pack = pack;
     elementsToReflect->unpack = unpack;
-    elementsToReflect->print_all = print_all;
+    elementsToReflect->printAll = printAll;
 }
 
-static void print_buffer(unsigned char *buffer, size_t size)
+static int countDimensions(const char *string)
 {
-    for (size_t j = 0; j < size; j++)
+    int count = 0;
+    for(int i=0; string[i]; ++i) if(string[i] == '[') ++count;
+    return count;
+}
+
+static void extractLengths(const char *string, int numberOfDimensions, size_t dimensions[numberOfDimensions])
+{
+    size_t number = 0;
+    int j = 0;
+    for(int i = 0; string[i] || j < numberOfDimensions; ++i)
+    {
+        switch(string[i])
+        {
+            case 48 ... 57 : // 1 to 9
+                if(number == 0) number = ((size_t) (string[i] - 48));
+                else number = number * 10 + ((size_t) (string[i] - 48));
+                break;
+            case 91 : // [
+                number = 0;
+                break;
+            case 93 : // ]
+                dimensions[j] = number;
+                ++j;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+static void printBuffer(unsigned char *buffer, size_t size)
+{
+    for (size_t j = 0; j < size; ++j)
         printf(" %02x", buffer[j]);
 }
 
 static size_t pack(void *class, unsigned char *buffer, struct class *elementsToReflect)
 {
-    size_t pos = 0, num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
-    for (size_t i = 0; i < num_members; i++)
+    size_t pos = 0, num_members = elementsToReflect->numAttributes + elementsToReflect->numMethods;
+    for (size_t i = 0; i < num_members; ++i)
     {
         memcpy(buffer+pos, ((unsigned char*)class)+elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
         pos += elementsToReflect->sizes[i];
@@ -68,8 +122,8 @@ static size_t pack(void *class, unsigned char *buffer, struct class *elementsToR
 
 static size_t unpack(unsigned char *buffer, void *class, struct class *elementsToReflect)
 {
-    size_t pos = 0, num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
-    for (size_t i = 0; i < num_members; i++)
+    size_t pos = 0, num_members = elementsToReflect->numAttributes + elementsToReflect->numMethods;
+    for (size_t i = 0; i < num_members; ++i)
     {
         memcpy(((unsigned char*)class)+elementsToReflect->offsets[i], buffer+pos, elementsToReflect->sizes[i]);
         pos += elementsToReflect->sizes[i];
@@ -77,28 +131,16 @@ static size_t unpack(unsigned char *buffer, void *class, struct class *elementsT
     return pos;
 }
 
-static void print_all(void *class, struct class *elementsToReflect)
+static void printAll(void *class, struct class *elementsToReflect)
 {
-    size_t num_members = elementsToReflect->num_attributes + elementsToReflect->num_methods;
+    size_t num_members = elementsToReflect->numAttributes + elementsToReflect->numMethods;
     printf("%s:\n", elementsToReflect->name);
-    for (size_t i = 0; i < num_members; i++)
+    for (size_t i = 0; i < num_members; ++i)
     {
         // %I64u for minGW using unsigned int of 64 bits
         // %zu or %llu for gcc in a real linux machine
-        //printf("\t%s: %I64u %I64u =", elementsToReflect->names[i], elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
-        print_buffer(((unsigned char*)class)+elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
-        printf("\n");
-    }
-}
-
-void garbage_collector(void)
-{
-    while(list.first != NULL)
-    {
-        struct entity *toDel = list.first;
-        free(toDel->instance);
-        list.first = list.first->next;
-        free(toDel);
-        list.size--;
+        //printf("\t%s: %I64u %I64u =", elementsToReflect->memberNames[i], elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
+        printBuffer(((unsigned char *) class) + elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
+        puts("");
     }
 }

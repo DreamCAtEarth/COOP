@@ -1,7 +1,9 @@
 #define package_vlDzoKUd_start
 #include "coop.h"
 
-void import_vlDzoKUd_package(void)
+struct vlDzoKUd vlDzoKUd;
+
+void import_vlDzoKUd(void)
 {
-    coop.lang = lang;
+    vlDzoKUd.lang = nnVYoBNR;
 }

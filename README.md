@@ -1,21 +1,21 @@
 # COOP
-C Object Oriented Project
+#### C Object Oriented Project
 
 COOP is a simple way or method to create C object oriented executables or libraries.
 The pretension of COOP is certainly not to substitute other OOP languages like C++, Objective C, Java, or else.
-It's only here to show it's possible to structure programs from an OO perspective and create some abstraction when it's needed from a non OO environment. At least it could be compared to other non OO languages of same level.
+It's only here to show it's possible to structure programs with an OO perspective and create some abstraction when it's needed from a non OO environment. At least it could be compared to other non OO languages of same level.
 But if you are on a real app project, please, use a real OOP existing langage.
-It's not a library or a framework by itself, because the code is only a set of examples to show the various ways to achieve some OOP concepts.
+It's not a library or a framework by itself, because the code is only a set of examples to show the various ways to achieve some OOP concepts, though it could output a lib with the objectModel files.
 
 The commits can attest to these achievements if you take a look to them.
 
-The compiler used is gcc from MinGW 8.1 posix w64 6.0.
-The build manager is cmake 3.14 (see CMakeLists.txt).
-The debugger is gdb from MinGW.
+The compiler used is gcc from **MinGW 8.1** posix **w64 6.0**.
+The build manager is **cmake 3.14** (see CMakeLists.txt).
+The debugger is **gdb from MinGW**.
 
-You can build directly the project with any cross platform oriented IDE like CLion from JetBrains.
+You can build directly the project with any cross platform oriented IDE like **CLion from JetBrains** or **Eclipse** from Oracle for example.
 
-No other configurations were tested but the code was designed to take advantages from some usefull gcc extensions, so it was not designed to be ported to another IDE.
+No other configurations were tested but the code was designed to take advantages from some usefull gcc extensions, so it was not designed to be ported to another compiler for the moment.
 However the code is still portable and should work when rebuilt on another OS :)
 
 To start to understand a bit the code, just look at the entry point (the main), you'll see several tests outputs (displayed at cmd).

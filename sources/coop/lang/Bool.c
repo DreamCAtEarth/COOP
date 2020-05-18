@@ -1,3 +1,4 @@
+#define Bool_family
 #include "Bool.h"
 
 #define IMPLEMENTS implementTester
@@ -6,50 +7,63 @@
 #define package_nnVYoBNR_start
 #include "lang.h"
 
-#define PACKAGE lang
+#define PACKAGE_USER nnVYoBNR
 #define CLASS Bool
 #define SELF CAT(CLASS,_)
 #define CLASS_PUBLIC_ID BwXbIZdw
 #define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
+#define IMPLEMENTATION implementTester
 
-#define OBJECT_DESCRIPTOR \
+#define OBJECT_DESCRIPTOR                                           \
     ATTRIBUTE(private, bool, value)
-#define CLASS_DESCRIPTOR \
-    METHOD_OD(public, bool , getValue, ...) \
-    METHOD_OD(public, void , setValue, bool) \
-    ATTRIBUTE(public_interface, struct implementTester *, ToTest)
+#define CLASS_DESCRIPTOR                                            \
+    METHOD_OD(public, bool, getValue)                               \
+    METHOD_OD(public, void, setValue, bool)                         \
+    METHOD_IM(public, void, IMPLEMENTATION, wrapperOfBooleans)
 #include "../../objectModel.h"
 
-struct CLASS_PUBLIC_ID *(CLASS_PUBLIC_ID)(bool arg, bool lastLevelH, struct SELF_PUBLIC_ID *that)
-{
-    if(!that && !lastLevelH) that = new(SELF);
-    create((struct SELF *) that);
-    if(!arg) return (void *) that;
+static void defaultConstructor(struct CLASS *);
 
-    struct CLASS *this = new(CLASS);
-
-    return (struct CLASS_PUBLIC_ID *) this;
-}
-
-static void create(struct SELF *that)
+size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
 {
     if(!self)
     {
-        PACKAGE.CLASS = self = new(SELF);
-        CLASS_DESCRIPTOR
-        self->ToTest = new(implementTester);
-        self->ToTest->wrapperOfBooleans = wrapperOfBooleans;
+        PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+        *self = (struct SELF)
+        {
+            .getValue = getValue,
+            .setValue = setValue,
+            .CAT3(IMPLEMENTATION, _, wrapperOfBooleans) = CAT3(IMPLEMENTATION, _, wrapperOfBooleans)
+        };
+        #ifdef REFLEXIVITY
+        reflex(&reflectInfos);
+        #endif
     }
-    if(that != NULL && that != NOTNULL)
-    {
-
-    }
-    #ifdef REFLEXIVITY
-        integrate_reflexivity(&reflectInfos);
-    #endif
+    if(that != NULL) *that = (struct SELF_PUBLIC_ID *) self;
+    return sizeof(struct CLASS);
 }
 
-static bool getValue(struct CLASS *this, ...)
+void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, void *args)
+{
+    defaultConstructor((struct CLASS *) this);
+    (void)args;
+}
+
+void CAT(CLASS_PUBLIC_ID,_)(void)
+{
+    if(self)
+    {
+        free(self);
+        self = NULL;
+    }
+}
+
+static void defaultConstructor(struct CLASS * this)
+{
+    (void)this;
+}
+
+static bool getValue(struct CLASS *this)
 {
     return this->value;
 }
@@ -59,7 +73,7 @@ static void setValue(struct CLASS *this, bool newValue)
     this->value = newValue;
 }
 
-static void wrapperOfBooleans(void)
+static void CAT3(IMPLEMENTATION, _, wrapperOfBooleans)(void *this)
 {
-
-}/**/
+    (void)this;
+}

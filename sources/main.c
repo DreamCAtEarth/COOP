@@ -1,29 +1,24 @@
 #include "coop/coop.h"
+#include "util/util.h"
 
 int main()
 {
-    import_vlDzoKUd_package();
-    main_coop();
-    garbage_collector();
-    return 0;
-}
+    new(kGAzHwmx, object1, [4][5], o1, "salut 1", "salut 2", "salut 3", "salut 4");
+    new(KPLGWrfu, object2, [6], o2, 3, 4.4f, 'p', 5.7);
 
-void main_coop(void)
-{
-    struct YPnOLrQT *aLotOfObjects = YPnOLrQT();
-    struct YPnOLrQT *aLotOfObjects2 = YPnOLrQT();
-    struct YPnOLrQT *aLotOfObjects3 = YPnOLrQT();
-    /*struct ddUKsuMN *aLotOfObjects4 = ddUKsuMN();
-    struct lbdtYEkR *aLotOfObjects5 = lbdtYEkR();*/
-    printf("Geometric class name from Derived : %s\n", coop.Geometric->Derived->Object->getClassName(coop.Geometric->Derived->Object));
-    printf("Geometric class name from Another : %s\n", coop.Geometric->Another->Object->getClassName(coop.Geometric->Another->Object));
-    printf("Object class name : %s\n", coop.Object->getClassName(coop.Object));
-    printf("Derived class name : %s\n", coop.Derived->Object->getClassName(coop.Derived->Object));
-    printf("Another class name : %s\n", coop.Another->Object->getClassName(coop.Another->Object));
-    coop.Geometric->Derived->Object->setPrivateAttribute(aLotOfObjects->Derived->Object, "test 3");
-    coop.Geometric->Derived->Object->setPrivateAttribute(aLotOfObjects2->Derived->Object, "test 2");
-    coop.Geometric->Derived->Object->setPrivateAttribute(aLotOfObjects3->Derived->Object, "test 1");
-    printf("%s\n", coop.Geometric->Derived->Object->getPrivateAttribute(aLotOfObjects->Derived->Object));
-    printf("%s\n", coop.Geometric->Derived->Object->getPrivateAttribute(aLotOfObjects2->Derived->Object));
-    printf("%s\n", coop.Geometric->Derived->Object->getPrivateAttribute(aLotOfObjects3->Derived->Object));
+    vlDzoKUd.Object->setProtectedAttribute(&(*object1)[1][1], "salut la compagnie 3 !");
+    for(int i = 0; i < 4; ++i)
+    {
+        for(int j=0; j < 5; ++j)
+        printf("attribut protégé : %s\n", vlDzoKUd.Object->getProtectedAttribute(&(*object1)[i][j]));
+    }
+    printf("Nom de la classe : %s\n", vlDzoKUd.Object->getClassName(vlDzoKUd.Object));
+
+    kdzvSGAN.Object->setAlternativePrivateAttribute(&(*object2)[4] ,8.8);
+    for(int i = 0; i < 6; ++i)
+    {
+        printf("attribut privé alternatif : %f\n", kdzvSGAN.Object->getAlternativePrivateAttribute(&(*object2)[i]));
+    }
+
+    return 0;
 }

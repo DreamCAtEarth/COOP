@@ -5,18 +5,18 @@
 
 #if defined(package_nnVYoBNR_start) && !defined(package_nnVYoBNR_stop)
 
-struct lang
-{
-    struct Bool_ *Bool;
-}lang;
+#define PACKAGE nnVYoBNR
+#define PACKAGE_CONTENT     \
+CLASS(Bool_, Bool)
+#include "../../objectModel.h"
 
 #define package_nnVYoBNR_stop
 #else
 
-struct nnVYoBNR
-{
-    struct BwXbIZdw_ *Bool;
-}lang;
+#define PACKAGE nnVYoBNR
+#define PACKAGE_CONTENT     \
+CLASS(BwXbIZdw_, Bool)
+#include "../../objectModel.h"
 
 #endif
 

@@ -1,63 +1,84 @@
 #ifndef OBJECT_MODEL_H
 #define OBJECT_MODEL_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "exceptionManager.h"
+#include <assert.h>
 
 #define STR_(A) #A
 #define STR(A) STR_(A)
 #define CAT_(A, B) A ## B
 #define CAT(A, B) CAT_(A, B)
+#define CAT3_(A, B, C) A ## B ## C
+#define CAT3(A, B, C) CAT3_(A, B, C)
 #define ENCAPSULATED const void * const
-#define NOTNULL (void *) ~(unsigned long long) NULL
-#define FC_WITH_OV(ov_arg) &(struct CAT(ov_arg,_overloads)){.options = CAT(ov_arg,_new_)}
-#define PC_WITH_OV NULL
-#define FC_WITHOUT_OV true
-#define PC_WITHOUT_OV false
-#define $YES true
-#define $NO false
+
+struct new_args
+{
+    void (*constructor)(void *, void *);
+    void (*destructor)(void);
+    size_t (*getSize)(void *);
+    char *strDimensionsAndLengths;
+    char *objectName;
+    void *instance_args;
+};
+
+struct object
+{
+    void (*destructor)(void);
+    char *name;
+    void *instance;
+    int dimensions;
+    size_t *lengths;
+    size_t totalSize;
+};
 
 struct class
 {
     char const *name;
-    size_t num_objects;
-    size_t num_attributes;
-    size_t num_methods;
-    size_t unpacked_size;
-    size_t packed_size;
+    size_t numObjects;
+    size_t numAttributes;
+    size_t numMethods;
+    size_t unpackedSize;
+    size_t packedSize;
     size_t *offsets;
     size_t *sizes;
-    char const **names;
-    void (*print_buffer)(unsigned char *, size_t);
+    char const **memberNames;
+    void (*printBuffer)(unsigned char *, size_t);
     size_t (*pack)(void *, unsigned char *, struct class *);
     size_t (*unpack)(unsigned char *, void *, struct class *);
-    void (*print_all)(void *, struct class *);
+    void (*printAll)(void *, struct class *);
 };
 
-struct entity
-{
-    void *instance;
-    struct entity *next;
-};
+void *(new)(struct new_args *);
+struct object *(find)(void *object);
+void (delete)(void *object);
+void (reflex)(struct class *elementsToReflect);
 
-struct list
-{
-    struct entity *first;
-    int size;
-};
+#define NEW(element, name, declarationArray, option, ...)                   \
+__attribute__((cleanup(delete))) struct element (*name)declarationArray =   \
+(new)                                                                       \
+(                                                                           \
+    &(struct new_args)                                                      \
+    {                                                                       \
+        (void (*)(void *, void *)) element,                                 \
+        (void (*)(void)) CAT(element,_),                                    \
+        (size_t (*)(void *)) CAT(element,_getSize),                         \
+        STR(declarationArray),                                              \
+        STR(name),                                                          \
+        &(struct CAT(element,_overloads))                                   \
+        {                                                                   \
+            .options = CAT3(element,_new_,option),                          \
+            .CAT(new_,option)= {__VA_ARGS__}                                \
+        }                                                                   \
+    }                                                                       \
+)
 
-void main_coop(void);
-void *(new)(size_t);
-void *(new_)(size_t);
-void integrate_reflexivity(struct class *);
-void garbage_collector(void);
-
-#define new(entity) new(sizeof(struct entity))
-#define new_(primitive) new_(sizeof(primitive))
+#define NEW_(element, name, declarationArray, ...) NEW(element, name, declarationArray, __VA_ARGS__)
+#define new(element, name, ...) NEW_(element, name, __VA_ARGS__)
 
 #endif //OBJECT_MODEL_H
 
@@ -71,11 +92,13 @@ void garbage_collector(void);
 #define class_declaration_name CAT(CLASS,_)
 #define object_declaration_name CLASS
 
-#define EXTENDS_OD(className, memberName) struct className *memberName;
+#define EXTENDS_OD(className, memberName) struct className memberName;
 #define EXTENDS_CD(className, memberName) struct CAT(className,_) *memberName;
 #define ATTRIBUTE(visibility, type, name) type name;
-#define METHOD_CD(visibility, returnedType, name, ...) returnedType (*(name))(struct class_declaration_name *self, __VA_ARGS__);
-#define METHOD_OD(visibility, returnedType, name, ...) returnedType (*(name))(struct object_declaration_name *this, __VA_ARGS__);
+#define METHOD_CD(visibility, returnedType, name, ...) returnedType (*name)(struct class_declaration_name *, ##__VA_ARGS__);
+#define METHOD_OD(visibility, returnedType, name, ...) returnedType (*name)(struct object_declaration_name *, ##__VA_ARGS__);
+#define METHOD_SA(visibility, returnedType, name, ...) returnedType (*name)(__VA_ARGS__);
+#define METHOD_IM(visibility, returnedType, interface, name, ...) returnedType (*(CAT3(interface, _, name)))(__VA_ARGS__);
 
 struct object_declaration_name
 {
@@ -93,135 +116,162 @@ static struct class_declaration_name
 #undef ATTRIBUTE
 #undef METHOD_CD
 #undef METHOD_OD
+#undef METHOD_SA
+#undef METHOD_IM
 
 #ifdef REFLEXIVITY
-
-static struct class reflectInfos =
-{
-    .name = __CLASS_NAME__,
-    .num_objects = (0),
-    .num_attributes =
-            (
-    #define EXTENDS_OD(className, memberName)
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) 1 +
-    #define METHOD_CD(visibility, returnedType, name, ...)
-    #define METHOD_OD(visibility, returnedType, name, ...)
-        OBJECT_DESCRIPTOR
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            0),
-    .num_methods =
-            (
-    #define EXTENDS_OD(className, memberName)
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name)
-    #define METHOD_CD(visibility, returnedType, name, ...) 1 +
-    #define METHOD_OD(visibility, returnedType, name, ...) 1 +
-        OBJECT_DESCRIPTOR
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            0),
-    .unpacked_size = sizeof(struct class_declaration_name) + sizeof(struct object_declaration_name),
-    .packed_size =
-            (
-    #define EXTENDS_OD(className, memberName)
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) sizeof(type) +
-    #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *) +
-    #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *) +
-        OBJECT_DESCRIPTOR
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            0),
-    .offsets = (size_t [])
-            {
-    #define EXTENDS_OD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) offsetof(struct object_declaration_name, name),
-        OBJECT_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef ATTRIBUTE
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) offsetof(struct class_declaration_name, name),
-    #define METHOD_CD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-    #define METHOD_OD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            },
-    .sizes = (size_t [])
-            {
-    #define EXTENDS_OD(className, memberName)
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) sizeof(type),
-    #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *),
-    #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *),
-        OBJECT_DESCRIPTOR
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            },
-    .names = (char const *[])
-            {
-    #define EXTENDS_OD(className, memberName)
-    #define EXTENDS_CD(className, memberName)
-    #define ATTRIBUTE(visibility, type, name) #type " : " #name ,
-    #define METHOD_CD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-    #define METHOD_OD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
-        OBJECT_DESCRIPTOR
-        CLASS_DESCRIPTOR
-    #undef EXTENDS_OD
-    #undef EXTENDS_CD
-    #undef ATTRIBUTE
-    #undef METHOD_CD
-    #undef METHOD_OD
-            },
-    .print_buffer = NULL,
-    .pack = NULL,
-    .unpack = NULL,
-    .print_all = NULL
-};
-
+    static struct class reflectInfos =
+    {
+        .name = __CLASS_NAME__,
+        .numObjects = (0),
+        .numAttributes =
+                (
+        #define EXTENDS_OD(className, memberName)
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) 1 +
+        #define METHOD_CD(visibility, returnedType, name, ...)
+        #define METHOD_OD(visibility, returnedType, name, ...)
+        #define METHOD_SA(visibility, returnedType, name, ...)
+        #define METHOD_IM(visibility, returnedType, interface, name, ...)
+            OBJECT_DESCRIPTOR
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                0),
+        .numMethods =
+                (
+        #define EXTENDS_OD(className, memberName)
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name)
+        #define METHOD_CD(visibility, returnedType, name, ...) 1 +
+        #define METHOD_OD(visibility, returnedType, name, ...) 1 +
+        #define METHOD_SA(visibility, returnedType, name, ...) 1 +
+        #define METHOD_IM(visibility, returnedType, interface, name, ...) 1 +
+            OBJECT_DESCRIPTOR
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                0),
+        .unpackedSize = sizeof(struct class_declaration_name) + sizeof(struct object_declaration_name),
+        .packedSize =
+                (
+        #define EXTENDS_OD(className, memberName)
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) sizeof(type) +
+        #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *) +
+        #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *) +
+        #define METHOD_SA(visibility, returnedType, name, ...) sizeof(void *) +
+        #define METHOD_IM(visibility, returnedType, interface, name, ...) sizeof(void *) +
+            OBJECT_DESCRIPTOR
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                0),
+        .offsets = (size_t [])
+                {
+        #define EXTENDS_OD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) offsetof(struct object_declaration_name, name),
+            OBJECT_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef ATTRIBUTE
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) offsetof(struct class_declaration_name, name),
+        #define METHOD_CD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
+        #define METHOD_OD(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
+        #define METHOD_SA(visibility, returnedType, name, ...) offsetof(struct class_declaration_name, name),
+        #define METHOD_IM(visibility, returnedType, interface, name, ...) offsetof(struct class_declaration_name, CAT3(interface, _, name)),
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                },
+        .sizes = (size_t [])
+                {
+        #define EXTENDS_OD(className, memberName)
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) sizeof(type),
+        #define METHOD_CD(visibility, returnedType, name, ...) sizeof(void *),
+        #define METHOD_OD(visibility, returnedType, name, ...) sizeof(void *),
+        #define METHOD_SA(visibility, returnedType, name, ...) sizeof(void *),
+        #define METHOD_IM(visibility, returnedType, interface, name, ...) sizeof(void *),
+            OBJECT_DESCRIPTOR
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                },
+        .memberNames = (char const *[])
+                {
+        #define EXTENDS_OD(className, memberName)
+        #define EXTENDS_CD(className, memberName)
+        #define ATTRIBUTE(visibility, type, name) #type " : " #name ,
+        #define METHOD_CD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
+        #define METHOD_OD(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
+        #define METHOD_SA(visibility, returnedType, name, ...) #returnedType " : " #name " (" #__VA_ARGS__ ") ",
+        #define METHOD_IM(visibility, returnedType, interface, name, ...) #returnedType " : " STR(CAT3(interface, _, name)) " (" #__VA_ARGS__ ") ",
+            OBJECT_DESCRIPTOR
+            CLASS_DESCRIPTOR
+        #undef EXTENDS_OD
+        #undef EXTENDS_CD
+        #undef ATTRIBUTE
+        #undef METHOD_CD
+        #undef METHOD_OD
+        #undef METHOD_SA
+        #undef METHOD_IM
+                },
+        .printBuffer = NULL,
+        .pack = NULL,
+        .unpack = NULL,
+        .printAll = NULL
+    };
 #endif
 
 #define EXTENDS_OD(className, memberName)
 #define EXTENDS_CD(className, memberName)
 #define ATTRIBUTE(visibility, type, name)
-#define METHOD_CD(visibility, returnedType, name, ...) static returnedType name(struct class_declaration_name *, __VA_ARGS__);
-#define METHOD_OD(visibility, returnedType, name, ...) static returnedType name(struct object_declaration_name *, __VA_ARGS__);
+#define METHOD_CD(visibility, returnedType, name, ...) static returnedType name(struct class_declaration_name *, ##__VA_ARGS__);
+#define METHOD_OD(visibility, returnedType, name, ...) static returnedType name(struct object_declaration_name *, ##__VA_ARGS__);
+#define METHOD_SA(visibility, returnedType, name, ...) static returnedType name(__VA_ARGS__);
+#define METHOD_IM(visibility, returnedType, interface, name, ...) static returnedType CAT3(interface, _, name)(__VA_ARGS__);
 
 OBJECT_DESCRIPTOR
 CLASS_DESCRIPTOR
-static void create(struct class_declaration_name *);
 
 #undef EXTENDS_OD
 #undef EXTENDS_CD
 #undef ATTRIBUTE
 #undef METHOD_CD
 #undef METHOD_OD
+#undef METHOD_SA
+#undef METHOD_IM
 
-#define EXTENDS_OD(className, memberName)
-#define EXTENDS_CD(className, memberName)
-#define ATTRIBUTE(visibility, type, name)
-#define METHOD_CD(visibility, returnedType, name, ...) self->name = name;
-#define METHOD_OD(visibility, returnedType, name, ...) self->name = name;
+#undef class_declaration_name
+#undef object_declaration_name
+
+#undef CLASS_DESCRIPTOR
+#undef OBJECT_DESCRIPTOR
 
 #else
 struct class_declaration_name
@@ -229,14 +279,16 @@ struct class_declaration_name
     CLASS_DESCRIPTOR
 };
 
-#undef class_declaration_name
-#undef object_declaration_name
-
 #undef EXTENDS_OD
 #undef EXTENDS_CD
 #undef ATTRIBUTE
 #undef METHOD_CD
 #undef METHOD_OD
+#undef METHOD_SA
+#undef METHOD_IM
+
+#undef class_declaration_name
+#undef object_declaration_name
 
 #undef CLASS_DESCRIPTOR
 #undef OBJECT_DESCRIPTOR
@@ -246,29 +298,40 @@ struct class_declaration_name
 
 #endif
 #elif defined(INTERFACE)
-
 #ifndef IMPLEMENTS
-    #warning "The interface :"
-    #pragma message STR(NAME) " is not implemented."
+    #error "The interface :"
+    #pragma message STR(INTERFACE) " is not implemented."
 #else
-#define METHOD_R(returnedType, inheritedClass, name, ...) returnedType (*(CAT(name,inheritedClass)))(__VA_ARGS__);
 
-struct IMPLEMENTS
-{
-    INTERFACE
-};
+#define METHOD(returnedType, inheritedInterface, name, ...) static returnedType CAT3(inheritedInterface,_,name)(void *, ##__VA_ARGS__);
 
-#undef METHOD_R
-
-#define METHOD_R(returnedType, inheritedClass, name, ...) static returnedType CAT(name,inheritedClass)(__VA_ARGS__);
-
-INTERFACE
+INTERFACE_DESCRIPTOR
 
 #undef IMPLEMENTS
-#undef METHOD_R
+#undef METHOD
 
 #endif
 
-#undef NAME
+#undef INTERFACE_DESCRIPTOR
 #undef INTERFACE
-#endif //CLASS OR INTERFACE
+#elif defined(PACKAGE)
+#ifndef PACKAGE_CONTENT
+    #warning "The package :"
+    #pragma message STR(PACKAGE) " is empty."
+#else
+
+#define CLASS(typeElementName, memberName) struct typeElementName *memberName;
+#define SUBPACKAGE(typeElementName, memberName) struct typeElementName memberName;
+
+extern struct PACKAGE
+{
+    PACKAGE_CONTENT
+}PACKAGE;
+
+#undef CLASS
+#undef SUBPACKAGE
+#undef PACKAGE_CONTENT
+#endif
+
+#undef PACKAGE
+#endif //CLASS OR INTERFACE OR PACKAGE
