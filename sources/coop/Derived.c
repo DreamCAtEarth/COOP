@@ -29,7 +29,16 @@ size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
 {
     if(!self)
     {
-        PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+        try {
+            PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+            allocationWellDone(&exception, self);
+        }
+        catch(badAllocationException)
+        {
+            printf("%s\n", exception.message);
+			garbageCollector();
+            exit(0);
+        } endTry
         *self = (struct SELF)
         {
 
@@ -37,51 +46,58 @@ size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
             .absCustom = absCustom,
             .useCustom = useCustom
         };
-    #ifdef REFLEXIVITY
+        #ifdef REFLEXIVITY
         reflex(&reflectInfos);
-    #endif
+        #endif
         CAT(SUPER_PUBLIC_ID,_getSize)((struct PARENT_PUBLIC_ID **) &self->Object);
     }
-    if(that != NULL) *that = (struct SELF_PUBLIC_ID *) self;
+    *that = (struct SELF_PUBLIC_ID *) self;
     return sizeof(struct CLASS);
 }
 
 void CAT(CLASS_PUBLIC_ID,_)(void)
 {
     PARENT_PUBLIC_ID();
-    if(self) free(self);
-    self = NULL;
+    if(self)
+    {
+        free(self);
+        self = NULL;
+    }
 }
 
 void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, struct CLASS_PUBLIC_ID_OV *args)
 {
-    manageOverloads( (struct CLASS *) this, args);
+    manageOverloads((struct CLASS *) this, args);
 }
 
 static void manageOverloads(struct CLASS *this, struct CLASS_PUBLIC_ID_OV *args)
 {
-    switch(args->options)
+    size_t numberOfElements = getLength(this);
+    for(size_t i=0; i < numberOfElements; ++i)
     {
-        case CAT(CLASS_PUBLIC_ID,_new_o1) :
-            this->SUPER.publicAttribute = args->new_o1.arg1;
-            this->SUPER.packageAttribute = args->new_o1.arg2;
-            this->SUPER.protectedAttribute = args->new_o1.arg3;
-            break;
-        case CAT(CLASS_PUBLIC_ID,_new_o2) :
-            this->SUPER.alternativePublicAttribute = args->new_o2.arg1;
-            this->SUPER.alternativePackageAttribute = args->new_o2.arg2;
-            this->SUPER.alternativeProtectedAttribute = args->new_o2.arg3;
-            break;
-        case CAT(CLASS_PUBLIC_ID,_new_) :
-            this->SUPER.publicAttribute = "default public";
-            this->SUPER.packageAttribute = "default package";
-            this->SUPER.protectedAttribute = "default protected";
-            this->SUPER.alternativePublicAttribute = 4;
-            this->SUPER.alternativePackageAttribute = 6.99f;
-            this->SUPER.alternativeProtectedAttribute = 'u';
-            break;
-        default:
-            break;
+        switch(args->options)
+        {
+            case CAT(CLASS_PUBLIC_ID,_new_o1) :
+                (this+i)->SUPER.publicAttribute = args->new_o1.arg1;
+                (this+i)->SUPER.packageAttribute = args->new_o1.arg2;
+                (this+i)->SUPER.protectedAttribute = args->new_o1.arg3;
+                break;
+            case CAT(CLASS_PUBLIC_ID,_new_o2) :
+                (this+i)->SUPER.alternativePublicAttribute = args->new_o2.arg1;
+                (this+i)->SUPER.alternativePackageAttribute = args->new_o2.arg2;
+                (this+i)->SUPER.alternativeProtectedAttribute = args->new_o2.arg3;
+                break;
+            case CAT(CLASS_PUBLIC_ID,_new_) :
+                (this+i)->SUPER.publicAttribute = "default public";
+                (this+i)->SUPER.packageAttribute = "default package";
+                (this+i)->SUPER.protectedAttribute = "default protected";
+                (this+i)->SUPER.alternativePublicAttribute = 4;
+                (this+i)->SUPER.alternativePackageAttribute = 6.99f;
+                (this+i)->SUPER.alternativeProtectedAttribute = 'u';
+                break;
+            default:
+                break;
+        }
     }
 }
 

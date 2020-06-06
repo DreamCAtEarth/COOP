@@ -1,112 +1,139 @@
 #include "objectModel.h"
 
-static int countDimensions(const char *);
-static void extractLengths(const char *, int, size_t []);
-static void printBuffer(unsigned char *, size_t);
+static struct exception exception;
+static struct simplyLinkedList list = {.first = NULL, .size = 0};
+
 static size_t pack(void *, unsigned char *, struct class *);
 static size_t unpack(unsigned char *, void *, struct class *);
-static void printAll(void *class, struct class *);
+static void print(void *class, struct class *);
 
 void *(new)(struct new_args *args)
 {
-    size_t sizeToAlloc = args->getSize(NULL);
-
-    int dimensions = countDimensions(args->strDimensionsAndLengths);
-    size_t *lengths = NULL;
-    if(dimensions > 0)
+    void extractLengths(const char *string, int numberOfDimensions, size_t dimensions[numberOfDimensions])
     {
-        lengths = malloc(sizeof(size_t) * (unsigned long long) dimensions);
-        extractLengths(args->strDimensionsAndLengths, dimensions, lengths);
-
-        for(int i = 1; i <= dimensions; ++i)
+        size_t number = 0;
+        int j = 0;
+        for(int i = 0; string[i] || j < numberOfDimensions; ++i)
         {
-            assert(lengths[i - 1]);
-            sizeToAlloc *= lengths[i - 1];
+            switch(string[i])
+            {
+                case 48 ... 57 : // 1 to 9
+                    if(number == 0) number = ((size_t) (string[i] - 48));
+                    else number = number * 10 + ((size_t) (string[i] - 48));
+                    break;
+                case 91 : // [
+                    number = 0;
+                    break;
+                case 93 : // ]
+                    dimensions[j] = number;
+                    ++j;
+                    break;
+                default:
+                    break;
+            }
         }
     }
-    struct object *object = malloc(sizeof(struct object) + sizeToAlloc);
+    int countDimensions(const char *string)
+    {
+        int count = 0;
+        for(int i=0; string[i]; ++i) if(string[i] == '[') ++count;
+        return count;
+    }
+    struct object *object = NULL;
+    size_t sizeToAlloc = args->getSize(&args->class);
+    int dimensions = countDimensions(args->strDimensionsAndLengths);
+    size_t *lengths = NULL;
+
+    if(dimensions > 0)
+    {
+        try {
+            lengths = malloc(sizeof(size_t) * (unsigned long long) dimensions);
+            allocationWellDone(&exception, lengths);
+        }
+        catch(badAllocationException)
+        {
+            printf("%s\n", exception.message);
+            garbageCollector();
+            exit(0);
+        } endTry
+        extractLengths(args->strDimensionsAndLengths, dimensions, lengths);
+        for(int i = 1; i <= dimensions; ++i) sizeToAlloc *= lengths[i - 1];
+    }
+
+    try {
+        object = malloc(sizeof(struct object) + sizeToAlloc);
+        allocationWellDone(&exception, object);
+    }
+    catch(badAllocationException)
+    {
+        printf("%s\n", exception.message);
+        garbageCollector();
+        exit(0);
+    } endTry
     *object = (struct object)
-            {
-                    .destructor = args->destructor,
-                    .name = args->objectName,
-                    .instance = object + 1,
-                    .dimensions = dimensions,
-                    .lengths = lengths,
-                    .totalSize = sizeToAlloc
-            };
+    {
+        .destructor = args->destructor,
+        .name = args->objectName,
+        .class = args->class,
+        .instance = object + 1,
+        .dimensions = dimensions,
+        .lengths = lengths,
+        .totalSize = sizeToAlloc
+    };
+    addOnHead(&list, object);
     args->constructor(object->instance, args->instance_args);
     return object->instance;
 }
 
 struct object *(find)(void *object)
 {
+    struct object *metadata = NULL;
     void **instance = (void **) object;
-
-    if (*instance == NULL) return NULL;
-    struct object *metadata = *instance - sizeof (struct object);
-    assert(*instance == metadata->instance); // instance shall be a pointer returned by new
+    try {
+        metadata = *instance - sizeof (struct object);
+        objectWellFound(&exception, *instance, metadata->instance);
+    }
+    catch(objectMetadataNotFoundException)
+    {
+        printf("%s\n", exception.message);
+        garbageCollector();
+        exit(0);
+    } endTry
 
     return metadata;
 }
 
 void (delete)(void *object)
 {
-    void **instance = object;
-
-    if (*instance == NULL) return;
-    struct object *metadata = *instance - sizeof (struct object);
-    assert(*instance == metadata->instance);
-    metadata->destructor();
-
-    if(metadata->dimensions > 0 && metadata->lengths != NULL)
-        free(metadata->lengths);
-    free(metadata);
+    struct simplyLinkedListNode *node = list.first;
+    node->object = find(object);
+    node->object->destructor();
+    if(node->object->dimensions > 0 && node->object->lengths != NULL) free(node->object->lengths);
+    free(node->object);
+    deleteOnHead(&list, node);
 }
 
 void (reflex)(struct class *elementsToReflect)
 {
-    elementsToReflect->printBuffer = printBuffer;
     elementsToReflect->pack = pack;
     elementsToReflect->unpack = unpack;
-    elementsToReflect->printAll = printAll;
+    elementsToReflect->print = print;
 }
 
-static int countDimensions(const char *string)
+size_t (getLength)(void *object)
 {
-    int count = 0;
-    for(int i=0; string[i]; ++i) if(string[i] == '[') ++count;
-    return count;
+    size_t length = 1;
+    struct object *metadata = find(&object);
+
+    if(metadata->dimensions > 0)
+        for(int i = 1; i <= metadata->dimensions; ++i) length *= metadata->lengths[i - 1];
+
+    return length;
 }
 
-static void extractLengths(const char *string, int numberOfDimensions, size_t dimensions[numberOfDimensions])
+void (garbageCollector)(void)
 {
-    size_t number = 0;
-    int j = 0;
-    for(int i = 0; string[i] || j < numberOfDimensions; ++i)
-    {
-        switch(string[i])
-        {
-            case 48 ... 57 : // 1 to 9
-                if(number == 0) number = ((size_t) (string[i] - 48));
-                else number = number * 10 + ((size_t) (string[i] - 48));
-                break;
-            case 91 : // [
-                number = 0;
-                break;
-            case 93 : // ]
-                dimensions[j] = number;
-                ++j;
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-static void printBuffer(unsigned char *buffer, size_t size)
-{
-    for (size_t j = 0; j < size; ++j)
-        printf(" %02x", buffer[j]);
+    while(list.first != NULL) delete(list.first->object);
 }
 
 static size_t pack(void *class, unsigned char *buffer, struct class *elementsToReflect)
@@ -131,15 +158,19 @@ static size_t unpack(unsigned char *buffer, void *class, struct class *elementsT
     return pos;
 }
 
-static void printAll(void *class, struct class *elementsToReflect)
+static void print(void *class, struct class *elementsToReflect)
 {
+    void printBuffer(unsigned char *buffer, size_t size)
+    {
+        for (size_t j = 0; j < size; ++j) printf(" %02x", buffer[j]);
+    }
     size_t num_members = elementsToReflect->numAttributes + elementsToReflect->numMethods;
     printf("%s:\n", elementsToReflect->name);
     for (size_t i = 0; i < num_members; ++i)
     {
         // %I64u for minGW using unsigned int of 64 bits
         // %zu or %llu for gcc in a real linux machine
-        //printf("\t%s: %I64u %I64u =", elementsToReflect->memberNames[i], elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
+        printf("\t%s: %I64u %I64u =", elementsToReflect->memberNames[i], elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
         printBuffer(((unsigned char *) class) + elementsToReflect->offsets[i], elementsToReflect->sizes[i]);
         puts("");
     }

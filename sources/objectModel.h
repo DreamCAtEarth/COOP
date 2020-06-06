@@ -6,7 +6,9 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <string.h>
-#include <assert.h>
+
+#include "exceptionManager.h"
+#include "collections/simplyLinkedList.h"
 
 #define STR_(A) #A
 #define STR(A) STR_(A)
@@ -23,6 +25,7 @@ struct new_args
     size_t (*getSize)(void *);
     char *strDimensionsAndLengths;
     char *objectName;
+    void *class;
     void *instance_args;
 };
 
@@ -30,6 +33,7 @@ struct object
 {
     void (*destructor)(void);
     char *name;
+    void *class;
     void *instance;
     int dimensions;
     size_t *lengths;
@@ -47,16 +51,17 @@ struct class
     size_t *offsets;
     size_t *sizes;
     char const **memberNames;
-    void (*printBuffer)(unsigned char *, size_t);
     size_t (*pack)(void *, unsigned char *, struct class *);
     size_t (*unpack)(unsigned char *, void *, struct class *);
-    void (*printAll)(void *, struct class *);
+    void (*print)(void *, struct class *);
 };
 
-void *(new)(struct new_args *);
+void *(new)(struct new_args *args);
 struct object *(find)(void *object);
 void (delete)(void *object);
 void (reflex)(struct class *elementsToReflect);
+size_t (getLength)(void *object);
+void (garbageCollector)(void);
 
 #define NEW(element, name, declarationArray, option, ...)                   \
 __attribute__((cleanup(delete))) struct element (*name)declarationArray =   \
@@ -69,6 +74,7 @@ __attribute__((cleanup(delete))) struct element (*name)declarationArray =   \
         (size_t (*)(void *)) CAT(element,_getSize),                         \
         STR(declarationArray),                                              \
         STR(name),                                                          \
+        NULL,                                                               \
         &(struct CAT(element,_overloads))                                   \
         {                                                                   \
             .options = CAT3(element,_new_,option),                          \
@@ -98,7 +104,7 @@ __attribute__((cleanup(delete))) struct element (*name)declarationArray =   \
 #define METHOD_CD(visibility, returnedType, name, ...) returnedType (*name)(struct class_declaration_name *, ##__VA_ARGS__);
 #define METHOD_OD(visibility, returnedType, name, ...) returnedType (*name)(struct object_declaration_name *, ##__VA_ARGS__);
 #define METHOD_SA(visibility, returnedType, name, ...) returnedType (*name)(__VA_ARGS__);
-#define METHOD_IM(visibility, returnedType, interface, name, ...) returnedType (*(CAT3(interface, _, name)))(__VA_ARGS__);
+#define METHOD_IM(visibility, returnedType, interface, name, ...) returnedType (*(CAT3(interface, _, name)))(void *, ##__VA_ARGS__);
 
 struct object_declaration_name
 {
@@ -241,12 +247,13 @@ static struct class_declaration_name
         #undef METHOD_SA
         #undef METHOD_IM
                 },
-        .printBuffer = NULL,
         .pack = NULL,
         .unpack = NULL,
-        .printAll = NULL
+        .print = NULL
     };
 #endif
+
+static struct exception exception;
 
 #define EXTENDS_OD(className, memberName)
 #define EXTENDS_CD(className, memberName)
@@ -254,7 +261,7 @@ static struct class_declaration_name
 #define METHOD_CD(visibility, returnedType, name, ...) static returnedType name(struct class_declaration_name *, ##__VA_ARGS__);
 #define METHOD_OD(visibility, returnedType, name, ...) static returnedType name(struct object_declaration_name *, ##__VA_ARGS__);
 #define METHOD_SA(visibility, returnedType, name, ...) static returnedType name(__VA_ARGS__);
-#define METHOD_IM(visibility, returnedType, interface, name, ...) static returnedType CAT3(interface, _, name)(__VA_ARGS__);
+#define METHOD_IM(visibility, returnedType, interface, name, ...)
 
 OBJECT_DESCRIPTOR
 CLASS_DESCRIPTOR

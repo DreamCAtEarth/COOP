@@ -10,49 +10,58 @@
 #define CLASS_PUBLIC_ID UQZwMHfN
 #define SELF_PUBLIC_ID CAT(CLASS_PUBLIC_ID,_)
 
-#define OBJECT_DESCRIPTOR           \
-    ATTRIBUTE(private, int, length) \
+#define OBJECT_DESCRIPTOR               \
+    ATTRIBUTE(private, int, length)     \
     ATTRIBUTE(private, int, width)
-#define CLASS_DESCRIPTOR            \
+#define CLASS_DESCRIPTOR                \
     METHOD_OD(public, int, area)
 #include "../objectModel.h"
-
-static void defaultConstructor(struct CLASS *);
 
 size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
 {
     if(!self)
     {
-        PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+        try {
+            PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+            allocationWellDone(&exception, self);
+        }
+        catch(badAllocationException)
+        {
+            printf("%s\n", exception.message);
+			garbageCollector();
+            exit(0);
+        } endTry
         *self = (struct SELF)
         {
             .area = area
         };
-    #ifdef REFLEXIVITY
+        #ifdef REFLEXIVITY
         reflex(&reflectInfos);
-    #endif
+        #endif
     }
-    if(that != NULL) *that = (struct SELF_PUBLIC_ID *) self;
+    *that = (struct SELF_PUBLIC_ID *) self;
     return sizeof(struct CLASS);
 }
 
-void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, void *args)
+void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this_, void *args)
 {
-    defaultConstructor((struct CLASS *) this);
+    struct CLASS * this = (struct CLASS *) this_;
+    size_t numberOfElements = getLength(this);
+    for(size_t i=0; i < numberOfElements; ++i)
+    {
+        (this+i)->length = 4;
+        (this+i)->width = 4;
+    }
     (void)args;
 }
 
 void CAT(CLASS_PUBLIC_ID,_)(void)
 {
-    if(self) free(self);
-    self = NULL;
-}
-
-static void defaultConstructor(struct CLASS * this)
-{
-    this->length = 4;
-    this->width = 4;
-    (void)this;
+    if(self)
+    {
+        free(self);
+        self = NULL;
+    }
 }
 
 static int area(struct CLASS *this)

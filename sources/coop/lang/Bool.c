@@ -22,13 +22,20 @@
     METHOD_IM(public, void, IMPLEMENTATION, wrapperOfBooleans)
 #include "../../objectModel.h"
 
-static void defaultConstructor(struct CLASS *);
-
 size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
 {
     if(!self)
     {
-        PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+        try {
+            PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+            allocationWellDone(&exception, self);
+        }
+        catch(badAllocationException)
+        {
+            printf("%s\n", exception.message);
+			garbageCollector();
+            exit(0);
+        } endTry
         *self = (struct SELF)
         {
             .getValue = getValue,
@@ -39,13 +46,13 @@ size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
         reflex(&reflectInfos);
         #endif
     }
-    if(that != NULL) *that = (struct SELF_PUBLIC_ID *) self;
+    *that = (struct SELF_PUBLIC_ID *) self;
     return sizeof(struct CLASS);
 }
 
 void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, void *args)
 {
-    defaultConstructor((struct CLASS *) this);
+    (void)this;
     (void)args;
 }
 
@@ -56,11 +63,6 @@ void CAT(CLASS_PUBLIC_ID,_)(void)
         free(self);
         self = NULL;
     }
-}
-
-static void defaultConstructor(struct CLASS * this)
-{
-    (void)this;
 }
 
 static bool getValue(struct CLASS *this)

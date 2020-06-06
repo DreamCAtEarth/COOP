@@ -41,7 +41,16 @@ size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
 {
     if(!self)
     {
-        PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+        try {
+            PACKAGE_USER.CLASS = self = malloc(sizeof(struct SELF));
+            allocationWellDone(&exception, self);
+        }
+        catch(badAllocationException)
+        {
+            printf("%s\n", exception.message);
+			garbageCollector();
+            exit(0);
+        } endTry
         *self = (struct SELF)
         {
             .setClassName = setClassName,
@@ -60,14 +69,17 @@ size_t CAT(CLASS_PUBLIC_ID, _getSize)(struct SELF_PUBLIC_ID **that)
         reflex(&reflectInfos);
         #endif
     }
-    if(that != NULL) *that = (struct SELF_PUBLIC_ID *) self;
+    *that = (struct SELF_PUBLIC_ID *) self;
     return sizeof(struct CLASS);
 }
 
 void CAT(CLASS_PUBLIC_ID,_)(void)
 {
-    if(self) free(self);
-    self = NULL;
+    if(self)
+    {
+        free(self);
+        self = NULL;
+    }
 }
 
 void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, struct CLASS_PUBLIC_ID_OV *args)
@@ -77,66 +89,25 @@ void (CLASS_PUBLIC_ID)(struct CLASS_PUBLIC_ID *this, struct CLASS_PUBLIC_ID_OV *
 
 static void manageOverloads(struct CLASS *this, struct CLASS_PUBLIC_ID_OV *args)
 {
-    size_t numberOfElements=1;
-    struct object *object = find(&this);
-    if(object->dimensions > 0)
-    {
-        for(int i = 1; i <= object->dimensions; ++i)
-            numberOfElements *= object->lengths[i - 1];
-
-        for(size_t i=0; i < numberOfElements; ++i)
-        {
-            switch(args->options)
-            {
-                case CAT(CLASS_PUBLIC_ID,_new_o1) :
-                    (this+i)->publicAttribute = args->new_o1.arg1;
-                    (this+i)->packageAttribute = args->new_o1.arg2;
-                    (this+i)->protectedAttribute = args->new_o1.arg3;
-                    (this+i)->privateAttribute = args->new_o1.arg4;
-                    break;
-                case CAT(CLASS_PUBLIC_ID,_new_o2) :
-                    (this+i)->alternativePublicAttribute = args->new_o2.arg1;
-                    (this+i)->alternativePackageAttribute = args->new_o2.arg2;
-                    (this+i)->alternativeProtectedAttribute = args->new_o2.arg3;
-                    (this+i)->alternativePrivateAttribute = args->new_o2.arg4;
-                    break;
-                case CAT(CLASS_PUBLIC_ID,_new_) :
-                    *(this+i) = (struct CLASS)
-                    {
-                        .publicAttribute = "default public",
-                        .packageAttribute = "default package",
-                        .protectedAttribute = "default protected",
-                        .privateAttribute = "default private",
-                        .alternativePublicAttribute = 2,
-                        .alternativePackageAttribute = 2.4f,
-                        .alternativeProtectedAttribute = 'c',
-                        .alternativePrivateAttribute = 3.6
-                    };
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-    else
+    size_t numberOfElements = getLength(this);
+    for(size_t i=0; i < numberOfElements; ++i)
     {
         switch(args->options)
         {
             case CAT(CLASS_PUBLIC_ID,_new_o1) :
-                this->publicAttribute = args->new_o1.arg1;
-                this->packageAttribute = args->new_o1.arg2;
-                this->protectedAttribute = args->new_o1.arg3;
-                this->privateAttribute = args->new_o1.arg4;
+                (this+i)->publicAttribute = args->new_o1.arg1;
+                (this+i)->packageAttribute = args->new_o1.arg2;
+                (this+i)->protectedAttribute = args->new_o1.arg3;
+                (this+i)->privateAttribute = args->new_o1.arg4;
                 break;
             case CAT(CLASS_PUBLIC_ID,_new_o2) :
-                this->alternativePublicAttribute = args->new_o2.arg1;
-                this->alternativePackageAttribute = args->new_o2.arg2;
-                this->alternativeProtectedAttribute = args->new_o2.arg3;
-                this->alternativePrivateAttribute = args->new_o2.arg4;
+                (this+i)->alternativePublicAttribute = args->new_o2.arg1;
+                (this+i)->alternativePackageAttribute = args->new_o2.arg2;
+                (this+i)->alternativeProtectedAttribute = args->new_o2.arg3;
+                (this+i)->alternativePrivateAttribute = args->new_o2.arg4;
                 break;
             case CAT(CLASS_PUBLIC_ID,_new_) :
-                *this = (struct CLASS)
+                *(this+i) = (struct CLASS)
                 {
                     .publicAttribute = "default public",
                     .packageAttribute = "default package",
